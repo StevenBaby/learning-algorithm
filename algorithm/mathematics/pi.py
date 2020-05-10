@@ -38,6 +38,12 @@ def divide(result, upper, under, sign):
     return change
 
 
+def merge(result):
+    result.insert(1, '.')
+    pi = ''.join([str(var) for var in result])
+    return pi
+
+
 def by_arctan(depth=300):
 
     result = [0 for var in range(depth + 1)]
@@ -60,13 +66,31 @@ def by_arctan(depth=300):
         if not change:
             break
 
-    result.insert(1, '.')
-    pi = ''.join([str(var) for var in result])
+    pi = merge(result)
+    return pi
+
+
+def by_bernouli(depth=300):
+    result = [0 for var in range(depth + 1)]
+    import random
+
+    total = 10000
+    inner = 0
+    for _ in range(total):
+        x = random.random()
+        y = random.random()
+        distance = x * x + y * y
+        if distance <= 1:
+            inner += 1
+
+    divide(result, inner * 4, total, 1)
+    pi = merge(result)
     return pi
 
 
 def main():
-    print(by_arctan(depth=1000))
+    print(by_arctan())
+    print(by_bernouli())
 
 
 if __name__ == '__main__':
