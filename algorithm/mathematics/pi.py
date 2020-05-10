@@ -89,8 +89,11 @@ def by_bernouli(depth=300):
 
 
 def main():
-    print(by_arctan())
-    print(by_bernouli())
+    import time
+    start = time.time()
+    print(by_arctan(depth=2000))
+    print(time.time() - start)
+    # print(by_bernouli())
 
 
 if __name__ == '__main__':
