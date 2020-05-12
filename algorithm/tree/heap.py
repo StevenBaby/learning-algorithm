@@ -61,8 +61,11 @@ class PriorityQueue(Heap):
         return self[0]
 
     def insert(self, key):
-        self.append(-float('inf'))
-        self.increase_key(self.size() - 1, key)
+        if self.type == Heap.MAX:
+            self.append(-float('inf'))
+        elif self.type == Heap.MIN:
+            self.append(float('inf'))
+        self.modify_key(self.size() - 1, key)
 
     def extract(self):
         if self.size() < 1:
@@ -73,9 +76,11 @@ class PriorityQueue(Heap):
         self.heapify(0)
         return top
 
-    def increase_key(self, index, key):
-        if key < self[index]:
+    def modify_key(self, index, key):
+        if self.type == self.MAX and key < self[index]:
             raise Exception('New key is smaller than current key')
+        elif self.type == self.MIN and key > self[index]:
+            raise Exception('New key is larger than current key')
         self[index] = key
         while index > 0 and not self.compare(self.parent(index), index):
             temp = self[index]
