@@ -6,6 +6,11 @@ import importlib
 
 modules = [
     'test_math_fact',
+
+    'test_tree_heap',
+
+    'test_sort_insertion',
+    'test_sort_quick',
 ]
 
 

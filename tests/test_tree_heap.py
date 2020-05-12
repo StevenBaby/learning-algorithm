@@ -21,10 +21,8 @@ class TestCase(BaseTestCase):
             heap.append(var)
 
         heap.build()
-        # print(heap)
         heap.sort()
-        self.assertEqual(heap,
-                         [15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+        self.assertEqual(heap, sorted(heap, reverse=True))
 
     def test_queue(self):
         from algorithm.tree.heap import PriorityQueue
