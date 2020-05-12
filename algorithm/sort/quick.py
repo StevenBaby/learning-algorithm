@@ -37,7 +37,7 @@ def quick_sort_version_2(data: list, begin=None, end=None):
     if begin >= end:
         return
 
-    def partion(data, begin, end):
+    def partition(data, begin, end):
         pivot = data[end]
         i = begin - 1
         for j in range(begin, end):
@@ -54,6 +54,6 @@ def quick_sort_version_2(data: list, begin=None, end=None):
         data[i + 1] = pivot
         return i + 1
 
-    mid = partion(data, begin, end)
+    mid = partition(data, begin, end)
     quick_sort_version_2(data, begin, mid - 1)
     quick_sort_version_2(data, mid + 1, end)
