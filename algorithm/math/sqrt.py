@@ -1,59 +1,77 @@
 # coding=utf-8
 
 
-precision = 10
+def sqrt(number, precision=10, type=str):
+    """[compute square root of integer for any precision]
 
+    Arguments:
+        number {[int]}
 
-def by_midsearch(value):
-    high = float(value)
-    low = float(value) / 2
-    while low * low > value:
-        high = low
-        low = low / 2
+    Keyword Arguments:
+        precision {int} -- (default: {10})
+        type {type} -- [result type] (default: {'string'})
 
-    prec = 1 / (10 ** precision)
+    Returns:
+        if type == str: return string
+        if type == int: return int
+    """
+    # find first bit
+    number *= 10000
 
-    counter = 0
-    while low != high:
-        counter += 1
-        mid = (low + high) / 2
-        product = mid * mid
+    high = number
+    low = 0
 
-        if product == value:
-            break
-        if (high - mid) < prec:
-            break
-        if product < value:
-            low = mid
-        else:
+    while high // 10 != low // 10:
+        mid = (high + low) // 2
+        if mid ** 2 > number:
             high = mid
+        else:
+            low = mid
 
-    return low
-
-
-def by_newton(value):
-    # x^2 - value = 0
-    # f(x) = x^2 - value
+    # f(x) = x^2 - number
+    # f'(x) = 2x^2
+    # x2 = x1 + (-f(x1)) / f'(x1)
+    # x2 = x1 + (number - x1^2) / (2(x1)^2)
     # newton method to resolve sqrt
 
-    # slope = 2 * x
+    number //= 100
+    result = mid // 10
+    bit = 1
+    shift = 1
+    carry = shift * 10
 
-    prec = 1 / (10 ** precision)
-    x = value / 2
-    while x * x > value:
-        x = x / 2
+    distance = number - result ** 2
 
     for counter in range(1000):
-        if x * x == value:
-            return x
-        before = x
-        x = x - (x * x - value) / (2 * x)
-        if abs(before - x) < prec:
+        # distance = number - result ** 2  # optimized by -= operation
+        slope = 2 * result
+
+        amend = distance * carry // slope
+
+        number *= carry ** 2  # prepare for next compute
+        distance *= carry ** 2
+
+        # (a + b)^2 = a^2 + 2ab + b^2
+        # (result + amend)^2 = result^2 + 2 * result * amend + amend^2
+        # distance -= 2 * result * amend + amend^2
+        distance -= (2 * result * carry + amend) * amend
+
+        result = result * carry + amend
+
+        bit += shift
+
+        if bit == precision:
             break
+        if bit * 2 > precision:
+            shift = precision - bit
+        else:
+            shift = bit
 
-    return x
+        carry = 10 ** shift
 
+    if type == int:
+        return result
 
-if __name__ == '__main__':
-    print(by_newton(2))
-    print(by_midsearch(2))
+    result = str(result)
+    result = result[:-precision] + "." + result[-precision:]
+    return result

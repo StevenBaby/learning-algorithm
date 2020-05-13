@@ -1,9 +1,15 @@
 {
 	"folders": [
         {
+            "name": "algorithm",
             "path": "algorithm"
         },
         {
+            "name": "experiments",
+            "path": "experiments"
+        },
+        {
+            "name": "tests",
             "path": "tests"
         }
     ],
