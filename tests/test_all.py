@@ -6,6 +6,9 @@ import importlib
 
 modules = [
     'test_math_fact',
+    'test_math_sqrt',
+    'test_math_compare',
+    'test_math_pi',
 
     'test_tree_heap',
 

@@ -1,6 +1,6 @@
 
 
-class BinaryTree(list):
+class ArrayBinaryTree(list):
 
     def __init__(self):
         super().__init__()
@@ -19,3 +19,17 @@ class BinaryTree(list):
     @staticmethod
     def right(index):
         return index * 2 + 2
+
+
+class BinaryNode(object):
+
+    def __init__(self):
+        self.parent = None
+        self.left = None
+        self.right = None
+
+
+class BinaryTree(object):
+
+    def __init__(self):
+        self.root = None
