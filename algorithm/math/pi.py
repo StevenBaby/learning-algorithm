@@ -1,100 +1,89 @@
 # coding=utf-8
 
 
-def divide(result, upper, under, sign):
-    change = False
-    bit = 0
-
-    while True:
-        if upper == 0:
-            break
-        if upper < under:
-            upper *= 10
-            bit += 1
-            continue
-
-        if bit >= len(result):
-            break
-
-        adder = (result[bit] + (upper // under) * sign)
-        upper = upper % under
-
-        carry = adder // 10
-        value = adder % 10
-        result[bit] = value
-        change = True
-
-        if carry == 0:
-            continue
-
-        b = bit - 1
-        while carry != 0 and b >= 0:
-            adder = (result[b] + carry)
-            carry = adder // 10
-            value = adder % 10
-            result[b] = value
-            b -= 1
-
-    return change
-
-
-def merge(result):
-    result.insert(1, '.')
-    pi = ''.join([str(var) for var in result])
-    return pi
-
-
-def by_arctan(depth=300):
-
-    result = [0 for var in range(depth + 1)]
-    sign = -1
-    var = -1
-
-    while True:
-        var += 2
-        sign *= -1
-        change = False
-        for i in (2, 5, 8):
-            under = (i ** var) * var
-            upper = 4
-            bit = 0
-
-            change = divide(result, upper, under, sign)
-            if not change:
-                break
-
-        if not change:
-            break
-
-    pi = merge(result)
-    return pi
-
-
-def by_bernouli(depth=300):
-    result = [0 for var in range(depth + 1)]
+def bernouli(times=10000):
     import random
 
-    total = 10000
     inner = 0
-    for _ in range(total):
+    for _ in range(times):
         x = random.random()
         y = random.random()
         distance = x * x + y * y
         if distance <= 1:
             inner += 1
 
-    divide(result, inner * 4, total, 1)
-    pi = merge(result)
+    pi = inner * 4 / times
     return pi
 
 
-def main():
-    import time
-    start = time.time()
-    print(by_arctan(depth=2000))
-    print(time.time() - start)
-    # print(by_bernouli())
+def chudnovsky(precision=100, type=str):
+    """Calculating PI by Chudnovsky formula
+
+    1 / pi = (1 / 53360 sqrt(640320)) sum(
+        (-1)^k * (6k)! / ((k!)^3 * (3k)!  ) *
+        (13591409 + 545140134 * k) / 64320^(3k)
+    )
+
+    sqrt(640320) = 8 * sqrt(10005)
+    53360 * sqrt(640320) = 426880 * sqrt(10005)
+
+    pi = (426880 * sqrt(10005)) / (
+        (-1)^k * (6k)! / ((k!)^3 * (3k)!  ) *
+        (13591409 + 545140134 * k) / 64320^(3k)
+    )
 
 
-if __name__ == '__main__':
-    main()
+    Keyword Arguments:
+        precision {int} -- (default: {10})
+        type {type} -- [result type] (default: {'string'})
+
+    Returns:
+        if type == str: return string
+        if type == int: return int
+    """
+
+    from .sqrt import sqrt
+
+    precise = precision + 2
+    carry = 10**precise
+
+    # Start Calculating
+    sqrt_10005 = sqrt(10005, precise, type=int)
+    product = 13591409 * carry
+    amend = 1
+
+    fact_6k = 1
+    fact_k3 = 1
+    fact_3k = 1
+
+    upper = 13591409
+    under = 1
+
+    sign = 1
+    k = 0
+    while abs(amend) > 0:
+        sign *= -1
+        k += 1
+
+        var = 6 * k
+        fact_6k *= var * (var - 1) * (var - 2) * (var - 3) * (var - 4) * (var - 5)
+
+        fact_k3 *= k ** 3
+
+        var = 3 * k
+        fact_3k *= var * (var - 1) * (var - 2)
+
+        upper += 545140134
+        under *= 262537412640768000  # 640320 ** 3
+
+        amend = (fact_6k * upper * carry) // (fact_k3 * fact_3k * under)
+        product += sign * amend
+
+    result = 426880 * sqrt_10005 * carry // product // 100
+
+    if type == int:
+        return result
+
+    result = str(result)
+    result = result[:-precision] + "." + result[-precision:]
+    return result
