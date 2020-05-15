@@ -1,6 +1,6 @@
 
 
-class BinaryTree(list):
+class ArrayBinaryTree(list):
 
     def __init__(self):
         super().__init__()
@@ -19,3 +19,97 @@ class BinaryTree(list):
     @staticmethod
     def right(index):
         return index * 2 + 2
+
+
+class BinaryNode(object):
+
+    def __init__(self, key=None, parent=None, left=None, right=None):
+        self.key = key
+        self.parent = parent
+        self.left = left
+        self.right = right
+
+    def __str__(self):
+        parent = None
+        if self.parent:
+            parent = self.parent.key
+        return f"{self.key}({parent})"
+
+    def __repr__(self):
+        return self.__str__()
+
+
+class BinaryTree(object):
+
+    Node = BinaryNode
+
+    def __init__(self):
+        self.nil = self.Node()
+        self.root = self.nil
+
+    def insert(self, key):
+        pass
+
+    def delete(self, key):
+        pass
+
+    def get_level_nodes(self):
+        queue = [(self.root, 1)]
+        levels = {}
+
+        while queue:
+            node, level = queue.pop()
+            if node == self.nil:
+                continue
+            levels.setdefault(level, [])
+            levels[level].append(node)
+
+            queue.insert(0, (node.left, level + 1))
+            queue.insert(0, (node.right, level + 1))
+
+        levels = sorted(levels.items(), key=lambda e: e[0])
+        levels = [level for var, level in levels]
+        return levels
+
+
+class SearchNode(BinaryNode):
+
+    def inorder_walk(self, callback=print, nil=None):
+        if self.left != nil:
+            self.left.inorder_walk(callback, nil)
+        callback(self)
+        if self.right != nil:
+            self.right.inorder_walk(callback, nil)
+
+
+class SearchTree(BinaryTree):
+
+    Node = SearchNode
+
+    def search(self, key):
+        pass
+
+    def inorder_walk(self, callback=print):
+        self.root.inorder_walk(callback, self.nil)
+
+    def insert(self, key):
+        node = self.Node(key=key, left=self.nil, right=self.nil)
+
+        parent = self.nil
+        child = self.root
+
+        while child != self.nil:
+            parent = child
+            if node.key < child.key:
+                child = child.left
+            else:
+                child = child.right
+
+        node.parent = parent
+
+        if parent == self.nil:
+            self.root = node
+        elif node.key < parent.key:
+            parent.left = node
+        else:
+            parent.right = node
