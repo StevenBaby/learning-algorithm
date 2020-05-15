@@ -1,9 +1,9 @@
 # coding=utf-8
 
-from .binary import BinaryTree
+from .binary import ArrayBinaryTree
 
 
-class Heap(BinaryTree):
+class Heap(ArrayBinaryTree):
 
     MAX = 1
     MIN = 2

@@ -8,6 +8,7 @@ modules = [
     'test_math_fact',
 
     'test_tree_heap',
+    'test_tree_binary',
 
     'test_sort_insertion',
     'test_sort_quick',
