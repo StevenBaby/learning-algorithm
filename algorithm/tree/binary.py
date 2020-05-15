@@ -41,6 +41,18 @@ class BinaryNode(object):
         else:
             return self.RIGHT
 
+    def is_left(self):
+        return self.LEFT == self.relation()
+
+    def is_right(self):
+        return self.RIGHT == self.relation()
+
+    def free(self):
+        self.key = None
+        self.parent = None
+        self.left = None
+        self.right = None
+
     def __str__(self):
         parent = None
         if self.parent:
@@ -202,3 +214,34 @@ class SearchTree(BinaryTree):
             parent.left = node
         else:
             parent.right = node
+
+    def transplant(self, node, replace):
+        if replace != self.nil:
+            replace.parent = node.parent
+
+        parent = node.parent
+        if parent == self.nil:
+            self.root = replace
+        elif node.is_left():
+            parent.left = replace
+        else:
+            parent.right = replace
+
+    def delete(self, key):
+        node = self.search(key)
+        if not node:
+            return
+        if node.left == self.nil:
+            self.transplant(node, node.right)
+        elif node.right == self.nil:
+            self.transplant(node, node.left)
+        else:
+            replace = self.minimum(node.right)
+            if replace.parent != node:
+                self.transplant(replace, replace.right)
+                replace.right = node.right
+                replace.right.parent = replace
+            self.transplant(node, replace)
+            replace.left = node.left
+            replace.left.parent = replace
+        node.free()
