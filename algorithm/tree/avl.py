@@ -6,7 +6,7 @@ from .binary import SearchNode, SearchTree
 class AVLNode(SearchNode):
 
     def factor(self):
-        return abs(self.left.height() - self.right.height())
+        return self.left.height() - self.right.height()
 
 
 class AVLTree(SearchTree):
@@ -15,7 +15,6 @@ class AVLTree(SearchTree):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.nil._height = 0
 
     def left_rotate(self, node):
 
@@ -67,34 +66,50 @@ class AVLTree(SearchTree):
 
         self.update_height(node)
 
+    def rebalance(self, node):
+        if abs(node.factor()) < 2:
+            return
+        if node.factor() == 2:  # left
+            if node.left.factor() == 1:  # LL
+                self.right_rotate(node)
+            elif node.left.factor() == -1:  # LR
+                self.left_rotate(node.left)
+                self.right_rotate(node)
+            elif node.left.factor() == 0:
+                self.right_rotate(node)
+            else:
+                raise Exception(f'factor {node.right.factor()} invalid')
+        elif node.factor() == -2:  # right
+            if node.right.factor() == 1:  # RL
+                self.right_rotate(node.right)
+                self.left_rotate(node)
+            elif node.right.factor() == -1:  # RR
+                self.left_rotate(node)
+            elif node.right.factor() == 0:
+                self.left_rotate(node)
+            else:
+                raise Exception(f'factor {node.right.factor()} invalid')
+        else:
+            raise Exception(f'factor {node.factor()} invalid')
+
     def insert(self, key):
         node = super().insert(key)
 
         child = node
-        pattern = []
-
         while True:
             parent = child.parent
             if parent == self.nil:
-                return node
-
-            pattern.append(child.relation())
-
-            if parent.factor() >= 2:
+                return parent
+            if abs(parent.factor()) >= 2:
                 break
             child = parent
 
-        pattern = pattern[-2:]
-
-        if pattern == [self.Node.RIGHT, self.Node.RIGHT]:
-            self.left_rotate(parent)
-        elif pattern == [self.Node.LEFT, self.Node.LEFT]:
-            self.right_rotate(parent)
-        elif pattern == [self.Node.LEFT, self.Node.RIGHT]:
-            self.right_rotate(child)
-            self.left_rotate(parent)
-        elif pattern == [self.Node.RIGHT, self.Node.LEFT]:
-            self.left_rotate(child)
-            self.right_rotate(parent)
-
+        self.rebalance(parent)
         return node
+
+    def delete(self, key):
+        super().delete(key)
+
+        self.postorder_walk(
+            callback=lambda node: self.rebalance(node)
+        )

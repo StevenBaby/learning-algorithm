@@ -1,18 +1,21 @@
 # coding=utf-8
+import unittest
 
 from test_base import BaseTestCase
 from algorithm.tree import binary
+
+skip = (__name__ == '__main__')
+skip = None
 
 
 class TestCase(BaseTestCase):
 
     keys = [7, 4, 11, 3, 6, 9, 18, 2, 14, 19, 12, 17, 22, 20, 21, 10]
 
+    @unittest.skipIf(skip, None)
     def test_build(self):
 
         tree = binary.SearchTree(self.keys)
-
-        nodes = str(tree.get_level_nodes())
         self.assertEqual(tree.height(), 7)
 
         keys = sorted(self.keys)
@@ -23,6 +26,7 @@ class TestCase(BaseTestCase):
         tree = binary.SearchTree(keys, random=True)
         self.assertLessEqual(tree.height(), 16)
 
+    @unittest.skipIf(skip, None)
     def test_walk(self):
         tree = binary.SearchTree(self.keys)
         value = []
@@ -37,6 +41,7 @@ class TestCase(BaseTestCase):
         tree.postorder_walk(callback=lambda e: value.append(e.key))
         self.assertEqual(value, [2, 3, 6, 4, 10, 9, 12, 17, 14, 21, 20, 22, 19, 18, 11, 7])
 
+    @unittest.skipIf(skip, None)
     def test_search(self):
         tree = binary.SearchTree(self.keys)
 
@@ -63,6 +68,7 @@ class TestCase(BaseTestCase):
         predecessor = tree.predecessor(tree.search(9))
         self.assertEqual(predecessor.key, 7)
 
+    @unittest.skipIf(skip, None)
     def test_delete(self):
         tree = binary.SearchTree(self.keys)
 
@@ -73,10 +79,10 @@ class TestCase(BaseTestCase):
         tree.delete(7)
         self.assertIsNone(tree.search(7))
 
+    @unittest.skipIf(skip, None)
     def test_height(self):
         tree = binary.SearchTree(self.keys)
         self.assertEqual(tree.height(), 7)
-
         tree = binary.SearchTree([1, 2, 3, 4, 5])
         self.assertEqual(tree.height(), 5)
 

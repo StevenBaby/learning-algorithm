@@ -101,6 +101,10 @@ class BinaryTree(object):
         levels = [level for var, level in levels]
         return levels
 
+    def print_level_nodes(self):
+        for level in self.get_level_nodes():
+            print(level)
+
 
 class SearchNode(BinaryNode):
 
@@ -229,10 +233,9 @@ class SearchTree(BinaryTree):
 
     def update_height(self, node):
         height = node.update_height()
-        while node.parent != self.nil:
-            height += 1
+        while node.parent not in (self.nil, None):
             node = node.parent
-            node._height = height
+            node.update_height()
 
     def insert(self, key):
         node = self.Node(key=key, left=self.nil, right=self.nil, height=1)
@@ -271,15 +274,19 @@ class SearchTree(BinaryTree):
             parent.left = replace
         else:
             parent.right = replace
+        self.update_height(replace)
+        self.update_height(parent)
 
     def delete(self, key):
         node = self.search(key)
         if not node:
             return
         if node.left == self.nil:
-            self.transplant(node, node.right)
+            replace = node.right
+            self.transplant(node, replace)
         elif node.right == self.nil:
-            self.transplant(node, node.left)
+            replace = node.left
+            self.transplant(node, replace)
         else:
             replace = self.minimum(node.right)
             if replace.parent != node:
@@ -290,3 +297,4 @@ class SearchTree(BinaryTree):
             replace.left = node.left
             replace.left.parent = replace
         node.free()
+        return replace
