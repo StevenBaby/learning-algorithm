@@ -34,6 +34,11 @@ class TestCase(BaseTestCase):
 
         self.assertFalse(tree.search(70))
 
+        minimum = tree.minimum()
+        self.assertEqual(minimum.key, 2)
+
+        maximum = tree.maximum()
+        self.assertEqual(maximum.key, 22)
 
 if __name__ == '__main__':
     TestCase.main()
