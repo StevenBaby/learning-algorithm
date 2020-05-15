@@ -13,15 +13,23 @@ class TestCase(BaseTestCase):
         tree = avl.AVLTree()
         for key in [8, 3, 10, 2, 5, 4]:
             tree.insert(key)
+        self.assertEqual(tree.root.key, 5)
+        self.assertEqual(tree.height(), 3)
 
         tree = avl.AVLTree()
         for key in [5, 3, 10, 8, 12, 9]:
             tree.insert(key)
+        self.assertEqual(tree.root.key, 8)
+        self.assertEqual(tree.height(), 3)
 
         tree = avl.AVLTree()
-        for key in range(15):
+        for key in range(1, 16):
             tree.insert(key)
+
         self.assertEqual(tree.height(), 4)
+
+    def test_delete(self):
+        pass
 
 
 if __name__ == '__main__':

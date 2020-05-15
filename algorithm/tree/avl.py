@@ -40,6 +40,8 @@ class AVLTree(SearchTree):
         y.left = x
         x.parent = y
 
+        self.update_height(node)
+
     def right_rotate(self, node):
 
         y = node
@@ -63,15 +65,16 @@ class AVLTree(SearchTree):
         x.right = y
         y.parent = x
 
+        self.update_height(node)
+
     def insert(self, key):
         node = super().insert(key)
 
-        parent = node.parent
         child = node
-
         pattern = []
 
         while True:
+            parent = child.parent
             if parent == self.nil:
                 return node
 
@@ -79,9 +82,7 @@ class AVLTree(SearchTree):
 
             if parent.factor() >= 2:
                 break
-
             child = parent
-            parent = parent.parent
 
         pattern = pattern[-2:]
 
