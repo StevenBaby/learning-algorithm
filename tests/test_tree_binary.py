@@ -40,5 +40,11 @@ class TestCase(BaseTestCase):
         maximum = tree.maximum()
         self.assertEqual(maximum.key, 22)
 
+        successor = tree.successor(tree.search(7))
+        self.assertEqual(successor.key, 9)
+
+        successor = tree.successor(tree.search(6))
+        self.assertEqual(successor.key, 7)
+
 if __name__ == '__main__':
     TestCase.main()

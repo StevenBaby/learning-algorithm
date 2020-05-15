@@ -130,21 +130,35 @@ class SearchTree(BinaryTree):
                 node = node.right
         return None
 
-    def maximum(self):
-        if self.root == self.nil:
+    def maximum(self, node=None):
+        if node is None:
+            node = self.root
+        if node == self.nil:
             return None
-        node = self.root
         while node.right != self.nil:
             node = node.right
         return node
 
-    def minimum(self):
-        if self.root == self.nil:
+    def minimum(self, node=None):
+        if node is None:
+            node = self.root
+        if node == self.nil:
             return None
-        node = self.root
         while node.left != self.nil:
             node = node.left
         return node
+
+    def successor(self, node):
+        if node.right != self.nil:
+            return self.minimum(node.right)
+        parent = node.parent
+        while parent != self.nil and node == parent.right:
+            node = parent
+            parent = node.parent
+
+        if parent == self.nil:
+            return None
+        return parent
 
     def inorder_walk(self, callback=print):
         self.root.inorder_walk(callback, self.nil)
