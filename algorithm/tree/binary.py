@@ -54,8 +54,10 @@ class BinaryNode(object):
         self.right = None
 
     def __str__(self):
-        parent = None
-        if self.parent:
+        if self.key is None:
+            return 'nil'
+        parent = 'nil'
+        if self.parent and self.parent.key is not None:
             parent = self.parent.key
 
         rel = self.relation()

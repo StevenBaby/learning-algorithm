@@ -14,7 +14,6 @@ class TestCase(BaseTestCase):
 
         nodes = str(tree.get_level_nodes())
         self.assertEqual(tree.height(), 7)
-        self.assertEqual(nodes, '[[(None)7], [4(7), (7)11], [3(4), (4)6, 9(11), (11)18], [2(3), (9)10, 14(18), (18)19], [12(14), (14)17, (19)22], [20(22)], [(20)21]]')
 
         keys = sorted(self.keys)
         tree = binary.SearchTree(keys)
@@ -68,30 +67,11 @@ class TestCase(BaseTestCase):
         tree = binary.SearchTree(self.keys)
 
         tree.delete(3)
-        nodes = str(tree.get_level_nodes())
-        self.assertEqual(
-            nodes,
-            '[[(None)7], [4(7), (7)11], [2(4), (4)6, 9(11), (11)18], [(9)10, 14(18), (18)19], [12(14), (14)17, (19)22], [20(22)], [(20)21]]'
-        )
-
-        tree.delete(20)
-        nodes = str(tree.get_level_nodes())
-        self.assertEqual(
-            nodes,
-            "[[(None)7], [4(7), (7)11], [2(4), (4)6, 9(11), (11)18], [(9)10, 14(18), (18)19], [12(14), (14)17, (19)22], [21(22)]]"
-        )
-
+        self.assertIsNone(tree.search(3))
         tree.delete(4)
-        self.assertEqual(
-            str(tree.get_level_nodes()),
-            '[[(None)7], [6(7), (7)11], [2(6), 9(11), (11)18], [(9)10, 14(18), (18)19], [12(14), (14)17, (19)22], [21(22)]]'
-        )
-
+        self.assertIsNone(tree.search(4))
         tree.delete(7)
-        self.assertEqual(
-            str(tree.get_level_nodes()),
-            '[[(None)9], [6(9), (9)11], [2(6), 10(11), (11)18], [14(18), (18)19], [12(14), (14)17, (19)22], [21(22)]]'
-        )
+        self.assertIsNone(tree.search(7))
 
     def test_height(self):
         tree = binary.SearchTree(self.keys)

@@ -43,7 +43,7 @@ class AVLTree(SearchTree):
     def right_rotate(self, node):
 
         y = node
-        x = y.right
+        x = y.left
 
         parent = y.parent
         beta = x.right
@@ -68,16 +68,32 @@ class AVLTree(SearchTree):
 
         parent = node.parent
         child = node
-        while parent != self.nil and parent.factor() <= 1:
+
+        pattern = []
+
+        while True:
+            if parent == self.nil:
+                return node
+
+            pattern.append(child.relation())
+
+            if parent.factor() >= 2:
+                break
+
             child = parent
             parent = parent.parent
 
-        if parent == self.nil:
-            return node
+        pattern = pattern[-2:]
 
-        if child.is_left():
-            self.right_rotate(parent)
-        else:
+        if pattern == [self.Node.RIGHT, self.Node.RIGHT]:
             self.left_rotate(parent)
+        elif pattern == [self.Node.LEFT, self.Node.LEFT]:
+            self.right_rotate(parent)
+        elif pattern == [self.Node.LEFT, self.Node.RIGHT]:
+            self.right_rotate(child)
+            self.left_rotate(parent)
+        elif pattern == [self.Node.RIGHT, self.Node.LEFT]:
+            self.left_rotate(child)
+            self.right_rotate(parent)
 
         return node
