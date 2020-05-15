@@ -10,7 +10,10 @@ class TestCase(BaseTestCase):
 
     def test(self):
 
-        tree = avl.AVLTree(self.keys)
+        tree = avl.AVLTree()
+        for key in [1, 2, 3, 4, 5, 6]:
+            tree.insert(key)
+            print(tree.get_level_nodes())
 
 
 if __name__ == '__main__':

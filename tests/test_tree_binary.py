@@ -93,6 +93,13 @@ class TestCase(BaseTestCase):
             '[[(None)9], [6(9), (9)11], [2(6), 10(11), (11)18], [14(18), (18)19], [12(14), (14)17, (19)22], [21(22)]]'
         )
 
+    def test_height(self):
+        tree = binary.SearchTree(self.keys)
+        self.assertEqual(tree.height(), 7)
+
+        tree = binary.SearchTree([1, 2, 3, 4, 5])
+        self.assertEqual(tree.height(), 5)
+
 
 if __name__ == '__main__':
     TestCase.main()

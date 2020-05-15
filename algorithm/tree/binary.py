@@ -102,6 +102,23 @@ class BinaryTree(object):
 
 class SearchNode(BinaryNode):
 
+    def __init__(self, height=0, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._height = height
+
+    def height(self):
+        if self._height > 0:
+            return self._height
+        if not self.left and not self.right:
+            return self._height
+
+        h = -1
+        if self.left:
+            h = max(self.left.height() + 1, h)
+        if self.right:
+            h = max(self.right.height() + 1, h)
+        return h
+
     def inorder_walk(self, callback=print, nil=None):
         if self.left != nil:
             self.left.inorder_walk(callback, nil)
@@ -222,6 +239,7 @@ class SearchTree(BinaryTree):
             parent.left = node
         else:
             parent.right = node
+        return node
 
     def transplant(self, node, replace):
         if replace != self.nil:
@@ -253,3 +271,6 @@ class SearchTree(BinaryTree):
             replace.left = node.left
             replace.left.parent = replace
         node.free()
+
+    def height(self):
+        return self.root.height()
