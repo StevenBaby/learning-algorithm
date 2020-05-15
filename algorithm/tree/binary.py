@@ -160,6 +160,18 @@ class SearchTree(BinaryTree):
             return None
         return parent
 
+    def predecessor(self, node):
+        if node.left != self.nil:
+            return self.maximum(node.left)
+        parent = node.parent
+        while parent != self.nil and node == parent.left:
+            node = parent
+            parent = node.parent
+
+        if parent == self.nil:
+            return None
+        return parent
+
     def inorder_walk(self, callback=print):
         self.root.inorder_walk(callback, self.nil)
 

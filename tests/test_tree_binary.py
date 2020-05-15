@@ -46,5 +46,12 @@ class TestCase(BaseTestCase):
         successor = tree.successor(tree.search(6))
         self.assertEqual(successor.key, 7)
 
+        predecessor = tree.predecessor(tree.search(7))
+        self.assertEqual(predecessor.key, 6)
+
+        predecessor = tree.predecessor(tree.search(9))
+        self.assertEqual(predecessor.key, 7)
+
+
 if __name__ == '__main__':
     TestCase.main()
