@@ -78,11 +78,8 @@ class BinaryTree(object):
         self.nil = self.Node()
         self.root = self.nil
 
-    def insert(self, key):
-        pass
-
-    def delete(self, key):
-        pass
+    def height(self):
+        return len(self.get_level_nodes())
 
     def get_level_nodes(self):
         queue = [(self.root, 1)]
@@ -130,6 +127,17 @@ class SearchNode(BinaryNode):
 class SearchTree(BinaryTree):
 
     Node = SearchNode
+
+    def __init__(self, keys=[], random=False):
+        super().__init__()
+        self.build(keys, random)
+
+    def build(self, keys: list, random=False):
+        if random:
+            import random as r
+            r.shuffle(keys)
+        for key in keys:
+            self.insert(key)
 
     def search(self, key):
         node = self.root
