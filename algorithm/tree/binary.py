@@ -120,7 +120,15 @@ class SearchTree(BinaryTree):
     Node = SearchNode
 
     def search(self, key):
-        pass
+        node = self.root
+        while node != self.nil:
+            if node.key == key:
+                return node
+            if key < node.key:
+                node = node.left
+            else:
+                node = node.right
+        return None
 
     def inorder_walk(self, callback=print):
         self.root.inorder_walk(callback, self.nil)

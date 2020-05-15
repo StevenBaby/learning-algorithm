@@ -29,6 +29,10 @@ class TestCase(BaseTestCase):
         tree.postorder_walk(callback=lambda e: value.append(e.key))
         self.assertEqual(value, [2, 3, 6, 4, 9, 12, 17, 14, 20, 22, 19, 18, 11, 7])
 
+        for key in self.keys:
+            self.assertTrue(tree.search(key))
+
+        self.assertFalse(tree.search(70))
 
 
 if __name__ == '__main__':
