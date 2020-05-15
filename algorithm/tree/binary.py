@@ -23,17 +23,36 @@ class ArrayBinaryTree(list):
 
 class BinaryNode(object):
 
+    ROOT = 1
+    LEFT = 2
+    RIGHT = 3
+
     def __init__(self, key=None, parent=None, left=None, right=None):
         self.key = key
         self.parent = parent
         self.left = left
         self.right = right
 
+    def relation(self):
+        if not self.parent:
+            return self.ROOT
+        if self.parent.left == self:
+            return self.LEFT
+        else:
+            return self.RIGHT
+
     def __str__(self):
         parent = None
         if self.parent:
             parent = self.parent.key
-        return f"{self.key}({parent})"
+
+        rel = self.relation()
+        if rel == self.ROOT:
+            return f"{self.key}"
+        elif rel == self.LEFT:
+            return f"{self.key}({parent})"
+        else:
+            return f"({parent}){self.key}"
 
     def __repr__(self):
         return self.__str__()
@@ -81,6 +100,20 @@ class SearchNode(BinaryNode):
         if self.right != nil:
             self.right.inorder_walk(callback, nil)
 
+    def preorder_walk(self, callback=print, nil=None):
+        callback(self)
+        if self.left != nil:
+            self.left.preorder_walk(callback, nil)
+        if self.right != nil:
+            self.right.preorder_walk(callback, nil)
+
+    def postorder_walk(self, callback=print, nil=None):
+        if self.left != nil:
+            self.left.postorder_walk(callback, nil)
+        if self.right != nil:
+            self.right.postorder_walk(callback, nil)
+        callback(self)
+
 
 class SearchTree(BinaryTree):
 
@@ -91,6 +124,12 @@ class SearchTree(BinaryTree):
 
     def inorder_walk(self, callback=print):
         self.root.inorder_walk(callback, self.nil)
+
+    def preorder_walk(self, callback=print):
+        self.root.preorder_walk(callback, self.nil)
+
+    def postorder_walk(self, callback=print):
+        self.root.postorder_walk(callback, self.nil)
 
     def insert(self, key):
         node = self.Node(key=key, left=self.nil, right=self.nil)
