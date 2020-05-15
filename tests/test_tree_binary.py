@@ -41,6 +41,11 @@ class TestCase(BaseTestCase):
         tree.postorder_walk(callback=lambda e: value.append(e.key))
         self.assertEqual(value, [2, 3, 6, 4, 10, 9, 12, 17, 14, 21, 20, 22, 19, 18, 11, 7])
 
+        value = []
+        tree.levelorder_walk(callback=lambda e: value.append(e.key))
+        # tree.print_level_nodes()
+        self.assertEqual(value, [7, 4, 11, 3, 6, 9, 18, 2, 10, 14, 19, 12, 17, 22, 20, 21])
+
     @unittest.skipIf(skip, None)
     def test_search(self):
         tree = binary.SearchTree(self.keys)

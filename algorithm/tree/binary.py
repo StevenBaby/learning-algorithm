@@ -27,11 +27,12 @@ class BinaryNode(object):
     LEFT = 2
     RIGHT = 3
 
-    def __init__(self, key=None, parent=None, left=None, right=None):
+    def __init__(self, key=None, parent=None, left=None, right=None, height=0):
         self.key = key
         self.parent = parent
         self.left = left
         self.right = right
+        self._height = height
 
     def relation(self):
         if not self.parent:
@@ -71,47 +72,6 @@ class BinaryNode(object):
     def __repr__(self):
         return self.__str__()
 
-
-class BinaryTree(object):
-
-    Node = BinaryNode
-
-    def __init__(self):
-        self.nil = self.Node()
-        self.root = self.nil
-
-    def height(self):
-        return len(self.get_level_nodes())
-
-    def get_level_nodes(self):
-        queue = [(self.root, 1)]
-        levels = {}
-
-        while queue:
-            node, level = queue.pop()
-            if node == self.nil:
-                continue
-            levels.setdefault(level, [])
-            levels[level].append(node)
-
-            queue.insert(0, (node.left, level + 1))
-            queue.insert(0, (node.right, level + 1))
-
-        levels = sorted(levels.items(), key=lambda e: e[0])
-        levels = [level for var, level in levels]
-        return levels
-
-    def print_level_nodes(self):
-        for level in self.get_level_nodes():
-            print(level)
-
-
-class SearchNode(BinaryNode):
-
-    def __init__(self, height=0, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._height = height
-
     def height(self):
         if self._height > 0:
             return self._height
@@ -150,10 +110,58 @@ class SearchNode(BinaryNode):
             self.right.postorder_walk(callback, nil)
         callback(self)
 
+    def levelorder_walk(self, callback=print, nil=None):
+        queue = [self]
+
+        while queue:
+            node = queue.pop()
+            if node == nil:
+                continue
+            callback(node)
+            queue.insert(0, node.left)
+            queue.insert(0, node.right)
+
+
+class BinaryTree(object):
+
+    Node = BinaryNode
+
+    def __init__(self):
+        self.nil = self.Node()
+        self.root = self.nil
+
+    def height(self):
+        return self.root.height()
+
+    def get_level_nodes(self):
+        queue = [(self.root, 1)]
+        levels = {}
+
+        while queue:
+            node, level = queue.pop()
+            if node == self.nil:
+                continue
+            levels.setdefault(level, [])
+            levels[level].append(node)
+
+            queue.insert(0, (node.left, level + 1))
+            queue.insert(0, (node.right, level + 1))
+
+        levels = sorted(levels.items(), key=lambda e: e[0])
+        levels = [level for var, level in levels]
+        return levels
+
+    def print_level_nodes(self):
+        for level in self.get_level_nodes():
+            print(level)
+
+
+class SearchNode(BinaryNode):
+
+    pass
+
 
 class SearchTree(BinaryTree):
-
-    Node = SearchNode
 
     def __init__(self, keys=[], random=False):
         super().__init__()
@@ -228,8 +236,8 @@ class SearchTree(BinaryTree):
     def postorder_walk(self, callback=print):
         self.root.postorder_walk(callback, self.nil)
 
-    def height(self):
-        return self.root.height()
+    def levelorder_walk(self, callback=print):
+        self.root.levelorder_walk(callback, self.nil)
 
     def update_height(self, node):
         height = node.update_height()
