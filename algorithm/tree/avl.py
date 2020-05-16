@@ -108,8 +108,12 @@ class AVLTree(SearchTree):
         return node
 
     def delete(self, key):
-        super().delete(key)
+        node = super().delete(key)
 
-        self.postorder_walk(
-            callback=lambda node: self.rebalance(node)
+        node.parent_walk(
+            callback=lambda e: self.rebalance(e),
+            nil=self.nil
         )
+        # self.postorder_walk(
+        #     callback=lambda node: self.rebalance(node)
+        # )
