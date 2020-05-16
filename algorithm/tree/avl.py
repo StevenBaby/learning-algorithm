@@ -5,7 +5,7 @@ from .binary import SearchNode, SearchTree
 
 class RotateMinxin(object):
 
-    def left_rotate(self, node):
+    def _left_rotate(self, node):
 
         x = node
         y = x.right
@@ -28,9 +28,9 @@ class RotateMinxin(object):
         y.left = x
         x.parent = y
 
-        self.update_height(node)
+        self._update_height(node)
 
-    def right_rotate(self, node):
+    def _right_rotate(self, node):
 
         y = node
         x = y.left
@@ -53,12 +53,12 @@ class RotateMinxin(object):
         x.right = y
         y.parent = x
 
-        self.update_height(node)
+        self._update_height(node)
 
 
 class AVLNode(SearchNode):
 
-    def factor(self):
+    def _factor(self):
         return self.left.height() - self.right.height()
 
 
@@ -66,31 +66,31 @@ class AVLTree(SearchTree, RotateMinxin):
 
     Node = AVLNode
 
-    def rebalance(self, node):
-        if abs(node.factor()) < 2:
+    def _rebalance(self, node):
+        if abs(node._factor()) < 2:
             return
-        if node.factor() == 2:  # left
-            if node.left.factor() == 1:  # LL
-                self.right_rotate(node)
-            elif node.left.factor() == -1:  # LR
-                self.left_rotate(node.left)
-                self.right_rotate(node)
-            elif node.left.factor() == 0:
-                self.right_rotate(node)
+        if node._factor() == 2:  # left
+            if node.left._factor() == 1:  # LL
+                self._right_rotate(node)
+            elif node.left._factor() == -1:  # LR
+                self._left_rotate(node.left)
+                self._right_rotate(node)
+            elif node.left._factor() == 0:
+                self._right_rotate(node)
             else:
-                raise Exception(f'factor {node.right.factor()} invalid')
-        elif node.factor() == -2:  # right
-            if node.right.factor() == 1:  # RL
-                self.right_rotate(node.right)
-                self.left_rotate(node)
-            elif node.right.factor() == -1:  # RR
-                self.left_rotate(node)
-            elif node.right.factor() == 0:
-                self.left_rotate(node)
+                raise Exception(f'factor {node.right._factor()} invalid')
+        elif node._factor() == -2:  # right
+            if node.right._factor() == 1:  # RL
+                self._right_rotate(node.right)
+                self._left_rotate(node)
+            elif node.right._factor() == -1:  # RR
+                self._left_rotate(node)
+            elif node.right._factor() == 0:
+                self._left_rotate(node)
             else:
-                raise Exception(f'factor {node.right.factor()} invalid')
+                raise Exception(f'factor {node.right._factor()} invalid')
         else:
-            raise Exception(f'factor {node.factor()} invalid')
+            raise Exception(f'factor {node._factor()} invalid')
 
     def insert(self, key, data=None):
         node = super().insert(key, data=data)
@@ -100,17 +100,17 @@ class AVLTree(SearchTree, RotateMinxin):
             parent = child.parent
             if parent == self.nil:
                 return parent
-            if abs(parent.factor()) >= 2:
+            if abs(parent._factor()) >= 2:
                 break
             child = parent
 
-        self.rebalance(parent)
+        self._rebalance(parent)
         return node
 
     def delete(self, key):
         node = super().delete(key)
 
         node.parent_walk(
-            callback=lambda e: self.rebalance(e),
+            callback=lambda e: self._rebalance(e),
             nil=self.nil
         )

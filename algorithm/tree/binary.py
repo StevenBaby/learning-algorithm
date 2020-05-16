@@ -77,9 +77,9 @@ class BinaryNode(object):
     def height(self):
         if self._height > 0:
             return self._height
-        return self.reckon_height()
+        return self._reckon_height()
 
-    def reckon_height(self):
+    def _reckon_height(self):
         height = 0
         if self.left:
             height = max(self.left.height() + 1, height)
@@ -87,8 +87,8 @@ class BinaryNode(object):
             height = max(self.right.height() + 1, height)
         return height
 
-    def update_height(self):
-        self._height = self.reckon_height()
+    def _update_height(self):
+        self._height = self._reckon_height()
         return self._height
 
     def inorder_walk(self, callback=print, nil=None):
@@ -164,6 +164,14 @@ class BinaryTree(object):
         for level in self.get_level_nodes():
             print(level)
 
+    def level_key_list(self):
+        data = []
+        self.root.levelorder_walk(
+            callback=lambda e: data.append(e.key),
+            nil=self.nil
+        )
+        return data
+
     def inorder_walk(self, callback=print):
         self.root.inorder_walk(callback, self.nil)
 
@@ -176,9 +184,9 @@ class BinaryTree(object):
     def levelorder_walk(self, callback=print):
         self.root.levelorder_walk(callback, self.nil)
 
-    def update_height(self, node):
+    def _update_height(self, node):
         node.parent_walk(
-            callback=lambda e: e.update_height(),
+            callback=lambda e: e._update_height(),
             nil=self.nil
         )
 
@@ -254,9 +262,12 @@ class SearchTree(BinaryTree):
             return None
         return parent
 
-    def insert(self, key, data=None):
+    def _init_node(self, key, data=None):
         node = self.Node(key=key, data=data, left=self.nil, right=self.nil, height=1)
+        return node
 
+    def insert(self, key, data=None):
+        node = self._init_node(key=key, data=data)
         parent = self.nil
         child = self.root
 
@@ -276,11 +287,11 @@ class SearchTree(BinaryTree):
         else:
             parent.right = node
 
-        self.update_height(node)
+        self._update_height(node)
 
         return node
 
-    def transplant(self, node, replace):
+    def _transplant(self, node, replace):
         if replace != self.nil:
             replace.parent = node.parent
 
@@ -291,35 +302,42 @@ class SearchTree(BinaryTree):
             parent.left = replace
         else:
             parent.right = replace
-        self.update_height(replace)
-        self.update_height(parent)
+        self._update_height(replace)
+        self._update_height(parent)
 
     def delete(self, key):
         node = self.search(key)
         if not node:
             return None
+
+        middle = node
+
         if (node.left, node.right) == (self.nil, self.nil):
             replace = node.parent
-            self.transplant(node, self.nil)
+            self._transplant(node, self.nil)
 
         elif node.left == self.nil:
             replace = node.right
-            self.transplant(node, replace)
+            self._transplant(node, replace)
 
         elif node.right == self.nil:
             replace = node.left
-            self.transplant(node, replace)
+            self._transplant(node, replace)
 
         else:
-            replace = self.minimum(node.right)
-            if replace.parent != node:
-                self.transplant(replace, replace.right)
-                replace.right = node.right
-                replace.right.parent = replace
+            middle = self.minimum(node.right)
+            replace = middle.right
 
-            self.transplant(node, replace)
-            replace.left = node.left
-            replace.left.parent = replace
+            if middle.parent == node:
+                replace.parent = middle
+            else:
+                self._transplant(middle, replace)
+                middle.right = node.right
+                middle.right.parent = middle
+
+            self._transplant(node, middle)
+            middle.left = node.left
+            middle.left.parent = middle
 
         node.free()
         return replace

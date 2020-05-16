@@ -13,13 +13,29 @@ class TestCase(BaseTestCase):
     keys = [7, 4, 11, 3, 6, 9, 18, 2, 14, 19, 12, 17, 22, 20, 21, 10]
 
     @unittest.skipIf(skip, None)
+    def test_search(self):
+        tree = avl.AVLTree(self.keys)
+
+        for key in self.keys:
+            self.assertTrue(tree.search(key))
+
+        self.assertFalse(tree.search(70))
+
+        minimum = tree.minimum()
+        self.assertEqual(minimum.key, 2)
+
+        maximum = tree.maximum()
+        self.assertEqual(maximum.key, 22)
+
+
+    @unittest.skipIf(skip, None)
     def test_insert(self):
         tree = avl.AVLTree()
         for key in [8, 7, 6, 5, 4]:
             tree.insert(key)
             # print(tree.height())
             # tree.print_level_nodes()
-            tree.inorder_walk(callback=lambda e: abs(e.factor()) < 2)
+            tree.inorder_walk(callback=lambda e: abs(e._factor()) < 2)
 
         self.assertEqual(tree.root.key, 7)
         self.assertEqual(tree.height(), 3)
@@ -29,7 +45,7 @@ class TestCase(BaseTestCase):
             tree.insert(key)
             # print(tree.height())
             # tree.print_level_nodes()
-            tree.inorder_walk(callback=lambda e: abs(e.factor()) < 2)
+            tree.inorder_walk(callback=lambda e: abs(e._factor()) < 2)
 
         self.assertEqual(tree.root.key, 5)
         self.assertEqual(tree.height(), 3)
@@ -37,7 +53,7 @@ class TestCase(BaseTestCase):
         tree = avl.AVLTree()
         for key in [8, 3, 10, 2, 5, 4]:
             tree.insert(key)
-            tree.inorder_walk(callback=lambda e: abs(e.factor()) < 2)
+            tree.inorder_walk(callback=lambda e: abs(e._factor()) < 2)
             # print(tree.height())
             # print(tree.get_level_nodes())
 
@@ -47,14 +63,14 @@ class TestCase(BaseTestCase):
         tree = avl.AVLTree()
         for key in [5, 3, 10, 8, 12, 9]:
             tree.insert(key)
-            tree.inorder_walk(callback=lambda e: abs(e.factor()) < 2)
+            tree.inorder_walk(callback=lambda e: abs(e._factor()) < 2)
         self.assertEqual(tree.root.key, 8)
         self.assertEqual(tree.height(), 3)
 
         tree = avl.AVLTree()
         for key in range(1, 16):
             tree.insert(key)
-            tree.inorder_walk(callback=lambda e: abs(e.factor()) < 2)
+            tree.inorder_walk(callback=lambda e: abs(e._factor()) < 2)
 
         self.assertEqual(tree.height(), 4)
 
