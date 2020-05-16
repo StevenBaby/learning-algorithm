@@ -3,18 +3,7 @@
 from .binary import SearchNode, SearchTree
 
 
-class AVLNode(SearchNode):
-
-    def factor(self):
-        return self.left.height() - self.right.height()
-
-
-class AVLTree(SearchTree):
-
-    Node = AVLNode
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class RotateMinxin(object):
 
     def left_rotate(self, node):
 
@@ -39,8 +28,6 @@ class AVLTree(SearchTree):
         y.left = x
         x.parent = y
 
-        self.update_height(node)
-
     def right_rotate(self, node):
 
         y = node
@@ -64,6 +51,23 @@ class AVLTree(SearchTree):
         x.right = y
         y.parent = x
 
+
+class AVLNode(SearchNode):
+
+    def factor(self):
+        return self.left.height() - self.right.height()
+
+
+class AVLTree(SearchTree, RotateMinxin):
+
+    Node = AVLNode
+
+    def left_rotate(self, node):
+        super().left_rotate(node)
+        self.update_height(node)
+
+    def right_rotate(self, node):
+        super().right_rotate(node)
         self.update_height(node)
 
     def rebalance(self, node):
@@ -114,6 +118,3 @@ class AVLTree(SearchTree):
             callback=lambda e: self.rebalance(e),
             nil=self.nil
         )
-        # self.postorder_walk(
-        #     callback=lambda node: self.rebalance(node)
-        # )
