@@ -1,22 +1,17 @@
 # coding=utf-8
 
+from .list import LinkedList
 
-class Steak(object):
 
-    def __init__(self):
-        # self.top = None
-        pass
+class Steak(LinkedList):
 
-    def push(self, key):
-        pass
+    def push(self, data):
+        self.append(data)
 
     def pop(self):
-        pass
+        return super().pop().data
 
     def top(self):
-        pass
-
-    def empty(self):
-        if self.top() is None:
-            return True
-        return False
+        if self.tail == self.nil:
+            return None
+        return self.tail.data

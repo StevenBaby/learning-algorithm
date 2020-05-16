@@ -1,19 +1,24 @@
 # coding=utf-8
 
+from .list import LinkedList
 
-class Queue(object):
 
-    def __init__(self):
-        pass
+class Queue(LinkedList):
 
-    def push(self, key):
-        pass
+    def push(self, data):
+        self.append(data)
 
     def pop(self):
-        pass
+        if self.head == self.nil:
+            return None
+        node = self.head
 
-    def head(self):
-        pass
+        self.head = self.head.next
+        if self.tail == node:
+            self.tail = self.nil
 
-    def tail(self):
-        pass
+        if self.head != self.nil:
+            self.head.prev = self.nil
+
+        self._length -= 1
+        return node.data

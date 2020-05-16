@@ -111,15 +111,16 @@ class BinaryNode(object):
         callback(self)
 
     def levelorder_walk(self, callback=print, nil=None):
-        queue = [self]
+        from ..linear.queue import Queue
+        queue = Queue([self])
 
-        while queue:
+        while not queue.empty():
             node = queue.pop()
             if node == nil:
                 continue
             callback(node)
-            queue.insert(0, node.left)
-            queue.insert(0, node.right)
+            queue.push(node.left)
+            queue.push(node.right)
 
     def parent_walk(self, callback=print, nil=None):
         node = self
@@ -140,18 +141,18 @@ class BinaryTree(object):
         return self.root.height()
 
     def get_level_nodes(self):
-        queue = [(self.root, 1)]
+        from ..linear.queue import Queue
+        queue = Queue([(self.root, 1)])
         levels = {}
 
-        while queue:
+        while not queue.empty():
             node, level = queue.pop()
             if node == self.nil:
                 continue
             levels.setdefault(level, [])
             levels[level].append(node)
-
-            queue.insert(0, (node.left, level + 1))
-            queue.insert(0, (node.right, level + 1))
+            queue.push((node.left, level + 1))
+            queue.push((node.right, level + 1))
 
         levels = sorted(levels.items(), key=lambda e: e[0])
         levels = [level for var, level in levels]
