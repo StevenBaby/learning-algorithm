@@ -96,8 +96,8 @@ class AVLTree(SearchTree, RotateMinxin):
         else:
             raise Exception(f'factor {node.factor()} invalid')
 
-    def insert(self, key):
-        node = super().insert(key)
+    def insert(self, key, data=None):
+        node = super().insert(key, data=data)
 
         child = node
         while True:
