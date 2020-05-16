@@ -28,6 +28,8 @@ class RotateMinxin(object):
         y.left = x
         x.parent = y
 
+        self.update_height(node)
+
     def right_rotate(self, node):
 
         y = node
@@ -51,6 +53,8 @@ class RotateMinxin(object):
         x.right = y
         y.parent = x
 
+        self.update_height(node)
+
 
 class AVLNode(SearchNode):
 
@@ -61,14 +65,6 @@ class AVLNode(SearchNode):
 class AVLTree(SearchTree, RotateMinxin):
 
     Node = AVLNode
-
-    def left_rotate(self, node):
-        super().left_rotate(node)
-        self.update_height(node)
-
-    def right_rotate(self, node):
-        super().right_rotate(node)
-        self.update_height(node)
 
     def rebalance(self, node):
         if abs(node.factor()) < 2:

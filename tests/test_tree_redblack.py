@@ -1,20 +1,26 @@
 # coding=utf-8
+import unittest
 
 from test_base import BaseTestCase
+from algorithm.tree import redblack
+
+skip = (__name__ == '__main__')
+skip = None
 
 
 class TestCase(BaseTestCase):
 
-    def test(self):
-        from algorithm.tree import redblack
-
-        # keys = [7, 4, 11, 3, 6, 9, 18, 2, 14, 19, 12, 17, 22, 20]
-        keys = [2, 3, 4, 6, 7, 9, 11, 12, 14, 17, 18, 19, 20, 22]
+    @unittest.skipIf(skip, None)
+    def test_insert(self):
+        tree = redblack.RedBlackTree([11, 2, 14, 1, 7, 15, 5, 8, 4])
+        self.assertEqual(tree.root.key, 7)
+        self.assertEqual(tree.height(), 4)
 
         tree = redblack.RedBlackTree()
-        for key in keys:
+        for key in [7, 4, 11, 3, 6, 9, 18, 2, 14, 19, 12, 17, 22, 20, 21, 10]:
             tree.insert(key)
-            print(tree.get_levels())
+        self.assertEqual(tree.root.key, 7)
+        self.assertEqual(tree.height(), 5)
 
 
 if __name__ == '__main__':
