@@ -92,8 +92,8 @@ class AVLTree(SearchTree):
         else:
             raise Exception(f'factor {node.factor()} invalid')
 
-    def insert(self, key):
-        node = super().insert(key)
+    def insert(self, key, data=None):
+        node = super().insert(key, data=data)
 
         child = node
         while True:
@@ -114,6 +114,3 @@ class AVLTree(SearchTree):
             callback=lambda e: self.rebalance(e),
             nil=self.nil
         )
-        # self.postorder_walk(
-        #     callback=lambda node: self.rebalance(node)
-        # )
