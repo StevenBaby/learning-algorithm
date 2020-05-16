@@ -27,11 +27,12 @@ class BinaryNode(object):
     LEFT = 2
     RIGHT = 3
 
-    def __init__(self, key=None, parent=None, left=None, right=None):
+    def __init__(self, key=None, parent=None, left=None, right=None, height=0):
         self.key = key
         self.parent = parent
         self.left = left
         self.right = right
+        self._height = height
 
     def relation(self):
         if not self.parent:
@@ -41,9 +42,23 @@ class BinaryNode(object):
         else:
             return self.RIGHT
 
+    def is_left(self):
+        return self.LEFT == self.relation()
+
+    def is_right(self):
+        return self.RIGHT == self.relation()
+
+    def free(self):
+        self.key = None
+        self.parent = None
+        self.left = None
+        self.right = None
+
     def __str__(self):
-        parent = None
-        if self.parent:
+        if self.key is None:
+            return 'nil'
+        parent = 'nil'
+        if self.parent and self.parent.key is not None:
             parent = self.parent.key
 
         rel = self.relation()
@@ -57,41 +72,22 @@ class BinaryNode(object):
     def __repr__(self):
         return self.__str__()
 
+    def height(self):
+        if self._height > 0:
+            return self._height
+        return self.reckon_height()
 
-class BinaryTree(object):
+    def reckon_height(self):
+        height = 0
+        if self.left:
+            height = max(self.left.height() + 1, height)
+        if self.right:
+            height = max(self.right.height() + 1, height)
+        return height
 
-    Node = BinaryNode
-
-    def __init__(self):
-        self.nil = self.Node()
-        self.root = self.nil
-
-    def insert(self, key):
-        pass
-
-    def delete(self, key):
-        pass
-
-    def get_level_nodes(self):
-        queue = [(self.root, 1)]
-        levels = {}
-
-        while queue:
-            node, level = queue.pop()
-            if node == self.nil:
-                continue
-            levels.setdefault(level, [])
-            levels[level].append(node)
-
-            queue.insert(0, (node.left, level + 1))
-            queue.insert(0, (node.right, level + 1))
-
-        levels = sorted(levels.items(), key=lambda e: e[0])
-        levels = [level for var, level in levels]
-        return levels
-
-
-class SearchNode(BinaryNode):
+    def update_height(self):
+        self._height = self.reckon_height()
+        return self._height
 
     def inorder_walk(self, callback=print, nil=None):
         if self.left != nil:
@@ -114,10 +110,93 @@ class SearchNode(BinaryNode):
             self.right.postorder_walk(callback, nil)
         callback(self)
 
+    def levelorder_walk(self, callback=print, nil=None):
+        queue = [self]
+
+        while queue:
+            node = queue.pop()
+            if node == nil:
+                continue
+            callback(node)
+            queue.insert(0, node.left)
+            queue.insert(0, node.right)
+
+    def parent_walk(self, callback=print, nil=None):
+        node = self
+        while node != nil:
+            callback(node)
+            node = node.parent
+
+
+class BinaryTree(object):
+
+    Node = BinaryNode
+
+    def __init__(self):
+        self.nil = self.Node()
+        self.root = self.nil
+
+    def height(self):
+        return self.root.height()
+
+    def get_level_nodes(self):
+        queue = [(self.root, 1)]
+        levels = {}
+
+        while queue:
+            node, level = queue.pop()
+            if node == self.nil:
+                continue
+            levels.setdefault(level, [])
+            levels[level].append(node)
+
+            queue.insert(0, (node.left, level + 1))
+            queue.insert(0, (node.right, level + 1))
+
+        levels = sorted(levels.items(), key=lambda e: e[0])
+        levels = [level for var, level in levels]
+        return levels
+
+    def print_level_nodes(self):
+        for level in self.get_level_nodes():
+            print(level)
+
+    def inorder_walk(self, callback=print):
+        self.root.inorder_walk(callback, self.nil)
+
+    def preorder_walk(self, callback=print):
+        self.root.preorder_walk(callback, self.nil)
+
+    def postorder_walk(self, callback=print):
+        self.root.postorder_walk(callback, self.nil)
+
+    def levelorder_walk(self, callback=print):
+        self.root.levelorder_walk(callback, self.nil)
+
+    def update_height(self, node):
+        node.parent_walk(
+            callback=lambda e: e.update_height(),
+            nil=self.nil
+        )
+
+
+class SearchNode(BinaryNode):
+
+    pass
+
 
 class SearchTree(BinaryTree):
 
-    Node = SearchNode
+    def __init__(self, keys=[], random=False):
+        super().__init__()
+        self.build(keys, random)
+
+    def build(self, keys: list, random=False):
+        if random:
+            import random as r
+            r.shuffle(keys)
+        for key in keys:
+            self.insert(key)
 
     def search(self, key):
         node = self.root
@@ -172,17 +251,8 @@ class SearchTree(BinaryTree):
             return None
         return parent
 
-    def inorder_walk(self, callback=print):
-        self.root.inorder_walk(callback, self.nil)
-
-    def preorder_walk(self, callback=print):
-        self.root.preorder_walk(callback, self.nil)
-
-    def postorder_walk(self, callback=print):
-        self.root.postorder_walk(callback, self.nil)
-
     def insert(self, key):
-        node = self.Node(key=key, left=self.nil, right=self.nil)
+        node = self.Node(key=key, left=self.nil, right=self.nil, height=1)
 
         parent = self.nil
         child = self.root
@@ -202,3 +272,51 @@ class SearchTree(BinaryTree):
             parent.left = node
         else:
             parent.right = node
+
+        self.update_height(node)
+
+        return node
+
+    def transplant(self, node, replace):
+        if replace != self.nil:
+            replace.parent = node.parent
+
+        parent = node.parent
+        if parent == self.nil:
+            self.root = replace
+        elif node.is_left():
+            parent.left = replace
+        else:
+            parent.right = replace
+        self.update_height(replace)
+        self.update_height(parent)
+
+    def delete(self, key):
+        node = self.search(key)
+        if not node:
+            return None
+        if (node.left, node.right) == (self.nil, self.nil):
+            replace = node.parent
+            self.transplant(node, self.nil)
+
+        elif node.left == self.nil:
+            replace = node.right
+            self.transplant(node, replace)
+
+        elif node.right == self.nil:
+            replace = node.left
+            self.transplant(node, replace)
+
+        else:
+            replace = self.minimum(node.right)
+            if replace.parent != node:
+                self.transplant(replace, replace.right)
+                replace.right = node.right
+                replace.right.parent = replace
+
+            self.transplant(node, replace)
+            replace.left = node.left
+            replace.left.parent = replace
+
+        node.free()
+        return replace

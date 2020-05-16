@@ -6,8 +6,12 @@ import importlib
 
 modules = [
     'test_math_fact',
+    'test_math_sqrt',
+    'test_math_pi',
 
     'test_tree_heap',
+    'test_tree_binary',
+    'test_tree_avl',
 
     'test_sort_insertion',
     'test_sort_quick',

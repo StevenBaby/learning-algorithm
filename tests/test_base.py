@@ -14,4 +14,4 @@ class BaseTestCase(unittest.TestCase):
 
     @staticmethod
     def main():
-        return unittest.main()
+        return unittest.main(failfast=True)
