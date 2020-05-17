@@ -1,9 +1,9 @@
 # coding=utf-8
 
-from .lists import LinkedList
+from .lists import DoubleLinkedList
 
 
-class Steak(LinkedList):
+class Steak(DoubleLinkedList):
 
     def push(self, data):
         self.append(data)

@@ -3,10 +3,9 @@
 
 class LinkedNode(object):
 
-    def __init__(self, data=None, next=None, prev=None):
+    def __init__(self, data=None, next=None):
         self.data = data
         self.next = next
-        self.prev = prev
 
     def __str__(self):
         if self.data is None:
@@ -17,9 +16,16 @@ class LinkedNode(object):
         return self.__str__()
 
 
-class LinkedList(object):
+class DoubleLinkedNode(LinkedNode):
 
-    Node = LinkedNode
+    def __init__(self, prev=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.prev = prev
+
+
+class DoubleLinkedList(object):
+
+    Node = DoubleLinkedNode
 
     def __init__(self, datas=[]):
         self.nil = self.Node()
@@ -122,7 +128,7 @@ class LinkedList(object):
         return self._size == 0
 
 
-class CircularList(LinkedList):
+class CircularList(DoubleLinkedList):
 
     def __init__(self, datas=[]):
         self.nil = self.Node()

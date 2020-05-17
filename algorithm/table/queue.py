@@ -1,9 +1,9 @@
 # coding=utf-8
 
-from .lists import LinkedList
+from .lists import DoubleLinkedList
 
 
-class Queue(LinkedList):
+class Queue(DoubleLinkedList):
 
     def push(self, data):
         self.append(data)

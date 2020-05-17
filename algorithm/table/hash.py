@@ -1,19 +1,32 @@
 # coding=utf-8
 
 from .direct import BaseTable
+from .lists import DoubleLinkedNode, DoubleLinkedList
 
 
-class HashNode(object):
-
-    def __init__(self, key, data):
-        self.key = key
-        self.data = data
+class ChainHashNode(DoubleLinkedNode):
+    pass
 
 
 class ChainHashTable(BaseTable):
 
-    Node = HashNode
+    def __init__(self):
+        self._size = 0
+        self.slots = [DoubleLinkedList() for _ in range(4)]
 
-    def _init_node(self, key, data):
-        node = self.Node(key=key, data=data)
-        return node
+    def _factor(self):
+        return self.size() / len(self.slots)
+
+    def _hash(self, key):
+        return key % len(self.slots)
+
+    def search(self, key):
+        hashkey = self._hash(key)
+        list = self.slots[hashkey].search(key)
+        node = list
+
+    def insert(self, key, data):
+        pass
+
+    def delete(self):
+        pass
