@@ -21,18 +21,20 @@ class TestCase(BaseTestCase):
             self.assertEqual(list.pop().key, key)
             self.assertEqual(list.size(), 0)
 
-        list = lists.DoubleLinkedList(self.keys)
+        list.walk(callback=lambda e: self.assertIsNotNone(e.key))
+
+        list = lists.LinkedList(self.keys)
         self.assertEqual(list.search(22).key, 22)
         self.assertIsNone(list.search(100))
 
-        list = lists.DoubleLinkedList()
+        list = lists.LinkedList()
         for key in self.keys:
             list.insert(0, key)
         self.assertEqual(list.size(), 16)
         for key in self.keys:
             self.assertEqual(list.pop().key, key)
 
-        list = lists.DoubleLinkedList(self.keys)
+        list = lists.LinkedList(self.keys)
         self.assertFalse(list.empty())
         for index, key in enumerate(self.keys):
             list.delete(key)
@@ -47,6 +49,8 @@ class TestCase(BaseTestCase):
             self.assertEqual(list.size(), 1)
             self.assertEqual(list.pop().key, key)
             self.assertEqual(list.size(), 0)
+
+        list.walk(callback=lambda e: self.assertIsNotNone(e.key))
 
         list = lists.DoubleLinkedList(self.keys)
         self.assertEqual(list.search(22).key, 22)

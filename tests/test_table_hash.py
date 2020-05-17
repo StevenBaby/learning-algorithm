@@ -17,6 +17,9 @@ class TestCase(BaseTestCase):
         table = hash.ChainHashTable()
         for index, key in enumerate(self.keys):
             table.insert(key)
+            for var, list in enumerate(table._bucket):
+                list.walk(callback=lambda e: self.assertIsNotNone(e.key))
+
             self.assertEqual(table.size(), index + 1)
 
         for index, key in enumerate(self.keys):

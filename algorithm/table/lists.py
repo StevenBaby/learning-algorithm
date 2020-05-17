@@ -90,7 +90,8 @@ class LinkedList(object):
             prev = next
             next = next.next
 
-        node = self._init_node(key=key, next=next)
+        node = self._init_node(key=key)
+        node.next = next
 
         if prev is None:
             self.head = node
@@ -125,10 +126,13 @@ class LinkedList(object):
     def walk(self, callback=print, stop=None):
         node = self.head
         for index in range(self.size()):
+            next = node.next
             callback(node)
             if stop is not None and stop(index, node):
                 break
-            node = node.next
+            if node.next != next:
+                self._size -= 1
+            node = next
 
     def print_list(self):
         nodes = []
