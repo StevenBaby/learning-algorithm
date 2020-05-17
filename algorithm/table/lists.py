@@ -32,8 +32,111 @@ class LinkedList(object):
         node = self.Node(key=key, next=self.nil)
         return node
 
+    def search(self, key):
+        node = self.head
+        while node != self.nil:
+            if node.key == key:
+                return node
+            node = node.next
+
+    def get(self, index):
+        if 0 > index >= self.size():
+            return None
+        node = self.head
+        for _ in range(index):
+            if node == self.nil:
+                return None
+            node = node.next
+        if node == self.nil:
+            return None
+        return node
+
     def append(self, key):
-        pass
+        node = self._init_node(key)
+        tail = self.get(self.size() - 1)
+        if not tail:
+            self.head = node
+        else:
+            tail.next = node
+        self._size += 1
+
+    def pop(self):
+        if self.empty():
+            return
+
+        tail = None
+        node = self.head
+        for _ in range(1, self.size()):
+            tail = node
+            node = tail.next
+        if not tail:
+            self.head = self.nil
+        else:
+            tail.next = self.nil
+
+        self._size -= 1
+        return node
+
+    def insert(self, index, key):
+        if index < 0:
+            return
+        if index >= self.size():
+            return self.append(key)
+
+        prev = None
+        next = self.head
+        for _ in range(0, index):
+            prev = next
+            next = next.next
+
+        node = self._init_node(key=key, next=next)
+
+        if prev is None:
+            self.head = node
+        else:
+            prev.next = node
+
+        self._size += 1
+
+    def delete(self, key):
+        if self.empty():
+            return
+
+        prev = None
+        node = self.head
+        next = node.next
+        for _ in range(self.size()):
+            if node.key == key:
+                break
+            prev = node
+            node = node.next
+            next = node.next
+
+        if prev is None:
+            self.head = next
+        else:
+            prev.next = next
+
+        self._size -= 1
+
+    def walk(self, callback=print, stop=None):
+        node = self.head
+        for index in range(self.size()):
+            callback(node)
+            if stop is not None and stop(index, node):
+                break
+            node = node.next
+
+    def print_list(self):
+        nodes = []
+        self.walk(callback=lambda e: nodes.append(e))
+        print(nodes)
+
+    def size(self):
+        return self._size
+
+    def empty(self):
+        return self._size == 0
 
 
 class DoubleLinkedNode(LinkedNode):
@@ -43,7 +146,7 @@ class DoubleLinkedNode(LinkedNode):
         self.prev = prev
 
 
-class DoubleLinkedList(object):
+class DoubleLinkedList(LinkedList):
 
     Node = DoubleLinkedNode
 
@@ -59,13 +162,6 @@ class DoubleLinkedList(object):
     def _init_node(self, key):
         node = self.Node(key=key, next=self.nil, prev=self.tail)
         return node
-
-    def search(self, key):
-        node = self.head
-        while node != self.nil:
-            if node.key == key:
-                return node
-            node = node.next
 
     def append(self, key):
         node = self._init_node(key)
@@ -85,16 +181,6 @@ class DoubleLinkedList(object):
         node = self.tail
         self.tail = self.tail.prev
         self._size -= 1
-        return node
-
-    def get(self, index):
-        node = self.head
-        for _ in range(index):
-            if node == self.nil:
-                return None
-            node = node.next
-        if node == self.nil:
-            return None
         return node
 
     def insert(self, index, key):
@@ -127,25 +213,6 @@ class DoubleLinkedList(object):
             next.prev = prev
 
         self._size -= 1
-
-    def walk(self, callback=print, stop=None):
-        node = self.head
-        for index in range(self.size()):
-            callback(node)
-            if stop is not None and stop(index, node):
-                break
-            node = node.next
-
-    def print_list(self):
-        nodes = []
-        self.walk(callback=lambda e: nodes.append(e))
-        print(nodes)
-
-    def size(self):
-        return self._size
-
-    def empty(self):
-        return self._size == 0
 
 
 class CircularList(DoubleLinkedList):

@@ -13,6 +13,33 @@ class TestCase(BaseTestCase):
     keys = [7, 4, 11, 3, 6, 9, 18, 2, 14, 19, 12, 17, 22, 20, 21, 10]
 
     @unittest.skipIf(skip, None)
+    def test_list(self):
+        list = lists.LinkedList()
+        for key in self.keys:
+            list.append(key)
+            self.assertEqual(list.size(), 1)
+            self.assertEqual(list.pop().key, key)
+            self.assertEqual(list.size(), 0)
+
+        list = lists.DoubleLinkedList(self.keys)
+        self.assertEqual(list.search(22).key, 22)
+        self.assertIsNone(list.search(100))
+
+        list = lists.DoubleLinkedList()
+        for key in self.keys:
+            list.insert(0, key)
+        self.assertEqual(list.size(), 16)
+        for key in self.keys:
+            self.assertEqual(list.pop().key, key)
+
+        list = lists.DoubleLinkedList(self.keys)
+        self.assertFalse(list.empty())
+        for index, key in enumerate(self.keys):
+            list.delete(key)
+            self.assertEqual(list.size(), len(self.keys) - index - 1)
+        self.assertTrue(list.empty())
+
+    @unittest.skipIf(skip, None)
     def test_double_list(self):
         list = lists.DoubleLinkedList()
         for key in self.keys:
