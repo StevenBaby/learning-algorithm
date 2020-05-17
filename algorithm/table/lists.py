@@ -59,6 +59,7 @@ class LinkedList(object):
         else:
             tail.next = node
         self._size += 1
+        return node
 
     def pop(self):
         if self.empty():
@@ -97,6 +98,7 @@ class LinkedList(object):
             prev.next = node
 
         self._size += 1
+        return node
 
     def delete(self, key):
         if self.empty():
@@ -118,6 +120,7 @@ class LinkedList(object):
             prev.next = next
 
         self._size -= 1
+        return node
 
     def walk(self, callback=print, stop=None):
         node = self.head
@@ -197,6 +200,7 @@ class DoubleLinkedList(LinkedList):
         if node.prev == self.nil:
             self.head = node
         self._size += 1
+        return node
 
     def delete(self, key):
         node = self.search(key)
@@ -213,6 +217,7 @@ class DoubleLinkedList(LinkedList):
             next.prev = prev
 
         self._size -= 1
+        return node
 
 
 class CircularList(DoubleLinkedList):
@@ -253,6 +258,7 @@ class CircularList(DoubleLinkedList):
             node.next = self.head
 
         self._size += 1
+        return node
 
     def pop(self):
         if self.empty():
@@ -292,6 +298,7 @@ class CircularList(DoubleLinkedList):
         place.prev = node
 
         self._size += 1
+        return node
 
     def delete(self, key):
         node = self.search(key)
@@ -308,3 +315,4 @@ class CircularList(DoubleLinkedList):
                 self.head = next
 
         self._size -= 1
+        return node

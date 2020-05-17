@@ -15,6 +15,20 @@ class TestCase(BaseTestCase):
     @unittest.skipIf(skip, None)
     def test(self):
         table = hash.ChainHashTable()
+        for index, key in enumerate(self.keys):
+            table.insert(key)
+            self.assertEqual(table.size(), index + 1)
+
+        for index, key in enumerate(self.keys):
+            node = table.search(key)
+            self.assertEqual(node.key, key)
+
+        self.assertEqual(table.search(111), None)
+
+        for index, key in enumerate(self.keys):
+            node = table.delete(key)
+            self.assertEqual(node.key, key)
+            self.assertEqual(table.size(), len(self.keys) - index - 1)
 
 
 if __name__ == '__main__':
