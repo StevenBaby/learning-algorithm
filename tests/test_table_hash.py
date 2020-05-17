@@ -25,9 +25,6 @@ class TestCase(BaseTestCase):
 
         self.assertEqual(table.search(111), None)
 
-        for list in table._slots:
-            print(list.size())
-
         for index, key in enumerate(self.keys):
             node = table.delete(key)
             self.assertEqual(node.key, key)
