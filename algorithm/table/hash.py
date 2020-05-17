@@ -24,9 +24,9 @@ class ChainHashTable(BaseTable):
 
     def __init__(self):
         self._size = 0
-        self._slot_size_before = 3
-        self._slot_size = 5
-        self._slots = [ChainHashList() for _ in range(self._slot_size)]
+        self._bucket_size_before = 3
+        self._bucket_size = 5
+        self._bucket = [ChainHashList() for _ in range(self._bucket_size)]
         self._update_factor()
 
     def _update_factor(self):
@@ -40,19 +40,19 @@ class ChainHashTable(BaseTable):
         self._realm_b = int((random.random() * self._realm_prime))
 
     def _factor(self):
-        return self._size / self._slot_size
+        return self._size / self._bucket_size
 
     def _hash_mod(self, key):
-        return key % self._slot_size
+        return key % self._bucket_size
 
     def _hash_multiply(self, key):
 
-        return int(self._slot_size * ((self._multiple_factor * key) % 1))
+        return int(self._bucket_size * ((self._multiple_factor * key) % 1))
 
     def _hash_realm(self, key):
         hashkey = (
             (self._realm_a * key + self._realm_b) % self._realm_prime
-        ) % self._slot_size
+        ) % self._bucket_size
         return hashkey
 
     def _hash(self, key):
@@ -63,24 +63,24 @@ class ChainHashTable(BaseTable):
     def _rehash(self):
         #  TODO can be optimize
 
-        slot_size = self._slot_size_before + self._slot_size
-        self._slot_size_before = self._slot_size
-        self._slot_size = slot_size
+        bucket_size = self._bucket_size_before + self._bucket_size
+        self._bucket_size_before = self._bucket_size
+        self._bucket_size = bucket_size
 
-        slots = self._slots
+        bucket = self._bucket
         self._size = 0
 
-        self._slots = [ChainHashList() for _ in range(self._slot_size)]
+        self._bucket = [ChainHashList() for _ in range(self._bucket_size)]
         self._update_factor()
 
-        for tree in slots:
+        for tree in bucket:
             tree.walk(
                 callback=lambda node: self.insert(node.key, node.data)
             )
 
     def search(self, key):
         hashkey = self._hash(key)
-        node = self._slots[hashkey].search(key)
+        node = self._bucket[hashkey].search(key)
         return node
 
     def insert(self, key, data=None):
@@ -88,12 +88,12 @@ class ChainHashTable(BaseTable):
             self._rehash()
 
         hashkey = self._hash(key)
-        node = self._slots[hashkey].insert(key, data)
+        node = self._bucket[hashkey].insert(key, data)
         self._size += 1
         return node
 
     def delete(self, key):
         hashkey = self._hash(key)
-        node = self._slots[hashkey].delete(key)
+        node = self._bucket[hashkey].delete(key)
         self._size -= 1
         return node
