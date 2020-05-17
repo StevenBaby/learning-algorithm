@@ -15,14 +15,29 @@ class TestCase(BaseTestCase):
     @unittest.skipIf(skip, None)
     def test_direct_table(self):
         table = direct.DirectAddressTable(size=len(self.keys))
-        self.assertEqual(table.size(), 16)
         for index, key in enumerate(self.keys):
             table.insert(index, key)
             self.assertEqual(table.search(index), key)
+            self.assertEqual(table.size(), index + 1)
 
         for index, key in enumerate(self.keys):
             table.delete(index)
             self.assertIsNone(table.search(index))
+
+    @unittest.skipIf(skip, None)
+    def test_open_table(self):
+        table = direct.OpenAddressTable(size=len(self.keys))
+        for index, key in enumerate(self.keys):
+            # print(index, key)
+            table.insert(key, key)
+            self.assertEqual(table.search(key), key)
+            self.assertEqual(table.size(), index + 1)
+
+        for key in self.keys:
+            table.delete(key)
+            self.assertIsNone(table.search(key))
+
+        self.assertEqual(table.size(), 0)
 
 
 if __name__ == '__main__':
