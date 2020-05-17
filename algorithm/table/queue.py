@@ -21,4 +21,4 @@ class Queue(DoubleLinkedList):
             self.head.prev = self.nil
 
         self._size -= 1
-        return node.data
+        return node.key

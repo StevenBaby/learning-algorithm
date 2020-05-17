@@ -3,17 +3,37 @@
 
 class LinkedNode(object):
 
-    def __init__(self, data=None, next=None):
-        self.data = data
+    def __init__(self, key=None, next=None):
+        self.key = key
         self.next = next
 
     def __str__(self):
-        if self.data is None:
+        if self.key is None:
             return 'nil'
-        return f'{self.data}'
+        return f'{self.key}'
 
     def __repr__(self):
         return self.__str__()
+
+
+class LinkedList(object):
+
+    Node = LinkedNode
+
+    def __init__(self, keys=[]):
+        self.nil = self.Node()
+        self.head = self.nil
+        self._size = 0
+
+        for key in keys:
+            self.append(key)
+
+    def _init_node(self, key):
+        node = self.Node(key=key, next=self.nil)
+        return node
+
+    def append(self, key):
+        pass
 
 
 class DoubleLinkedNode(LinkedNode):
@@ -27,28 +47,28 @@ class DoubleLinkedList(object):
 
     Node = DoubleLinkedNode
 
-    def __init__(self, datas=[]):
+    def __init__(self, keys=[]):
         self.nil = self.Node()
         self.head = self.nil
         self.tail = self.nil
         self._size = 0
 
-        for data in datas:
-            self.append(data)
+        for key in keys:
+            self.append(key)
 
-    def _init_node(self, data):
-        node = self.Node(data=data, next=self.nil, prev=self.tail)
+    def _init_node(self, key):
+        node = self.Node(key=key, next=self.nil, prev=self.tail)
         return node
 
-    def search(self, data):
+    def search(self, key):
         node = self.head
         while node != self.nil:
-            if node.data == data:
+            if node.key == key:
                 return node
             node = node.next
 
-    def append(self, data):
-        node = self._init_node(data)
+    def append(self, key):
+        node = self._init_node(key)
         if self.tail == self.nil:
             self.head = node
             self.tail = node
@@ -77,12 +97,12 @@ class DoubleLinkedList(object):
             return None
         return node
 
-    def insert(self, index, data):
+    def insert(self, index, key):
         place = self.get(index)
         if not place:
-            return self.append(data)
+            return self.append(key)
 
-        node = self._init_node(data=data)
+        node = self._init_node(key=key)
         node.next = place
         node.prev = place.prev
         place.prev.next = node
@@ -92,8 +112,8 @@ class DoubleLinkedList(object):
             self.head = node
         self._size += 1
 
-    def delete(self, data):
-        node = self.search(data)
+    def delete(self, key):
+        node = self.search(key)
         if not node:
             return
 
@@ -130,30 +150,30 @@ class DoubleLinkedList(object):
 
 class CircularList(DoubleLinkedList):
 
-    def __init__(self, datas=[]):
+    def __init__(self, keys=[]):
         self.nil = self.Node()
         self.head = self.nil
         self._size = 0
 
-        for data in datas:
-            self.append(data)
+        for key in keys:
+            self.append(key)
 
-    def _init_node(self, data):
-        node = self.Node(data=data)
+    def _init_node(self, key):
+        node = self.Node(key=key)
         return node
 
-    def search(self, data):
-        if self.head.data == data:
+    def search(self, key):
+        if self.head.key == key:
             return self.head
 
         node = self.head.next
         while node != self.head:
-            if node.data == data:
+            if node.key == key:
                 return node
             node = node.next
 
-    def append(self, data):
-        node = self._init_node(data=data)
+    def append(self, key):
+        node = self._init_node(key=key)
         if self.head == self.nil:
             self.head = node
             node.next = node
@@ -193,12 +213,12 @@ class CircularList(DoubleLinkedList):
             node = node.next
         return node
 
-    def insert(self, index, data):
+    def insert(self, index, key):
         place = self.get(index)
         if not place:
-            return self.append(data)
+            return self.append(key)
 
-        node = self._init_node(data=data)
+        node = self._init_node(key=key)
         node.next = place
         node.prev = place.prev
         place.prev.next = node
@@ -206,8 +226,8 @@ class CircularList(DoubleLinkedList):
 
         self._size += 1
 
-    def delete(self, data):
-        node = self.search(data)
+    def delete(self, key):
+        node = self.search(key)
         if not node:
             return
         if self.size() == 1:

@@ -9,9 +9,9 @@ class Steak(DoubleLinkedList):
         self.append(data)
 
     def pop(self):
-        return super().pop().data
+        return super().pop().key
 
     def top(self):
         if self.tail == self.nil:
             return None
-        return self.tail.data
+        return self.tail.key
