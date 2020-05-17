@@ -40,6 +40,7 @@ class ChainHashTable(BaseTable):
         self._bucket_size_before = 3
         self._bucket_size = 5
         self._bucket = [ChainHashList() for _ in range(self._bucket_size)]
+        self._max_factor = 0.8
         self._update_factor()
 
     def _update_factor(self):
@@ -101,7 +102,7 @@ class ChainHashTable(BaseTable):
         return node
 
     def insert(self, key, data=None):
-        if self._factor() > 0.8:
+        if self._factor() > self._max_factor:
             self._rehash()
 
         hashkey = self._hash(key)
