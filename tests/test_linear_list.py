@@ -45,6 +45,29 @@ class TestCase(BaseTestCase):
             self.assertEqual(list.size(), len(self.keys) - index - 1)
         self.assertTrue(list.empty())
 
+    @unittest.skipIf(skip, None)
+    def test_circular_list(self):
+        list = linear.CircularList()
+        for data in self.keys:
+            list.append(data)
+        list.print_list()
+        list.walk(
+            callback=lambda e: None,
+            stop=lambda index, node: self.assertEqual(node.data, self.keys[index])
+        )
+        self.assertEqual(list.head.prev.data, 10)
+        self.assertEqual(list.size(), 16)
+        self.assertEqual(list.search(21).data, 21)
+        self.assertEqual(list.get(14).data, 21)
+        self.assertIsNone(list.search(123))
+        list.insert(5, 66)
+        self.assertEqual(list.get(5).data, 66)
+        self.assertEqual(list.get(6).data, 9)
+        list.delete(7)
+        self.assertEqual(list.head.data, 4)
+        list.delete(10)
+        self.assertEqual(list.head.prev.data, 21)
+
 
 if __name__ == '__main__':
     TestCase.main()

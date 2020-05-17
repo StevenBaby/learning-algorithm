@@ -30,6 +30,10 @@ class LinkedList(object):
         for data in datas:
             self.append(data)
 
+    def _init_node(self, data):
+        node = self.Node(data=data, next=self.nil, prev=self.tail)
+        return node
+
     def search(self, data):
         node = self.head
         while node != self.nil:
@@ -38,7 +42,7 @@ class LinkedList(object):
             node = node.next
 
     def append(self, data):
-        node = self.Node(data=data, next=self.nil, prev=self.tail)
+        node = self._init_node(data)
         if self.tail == self.nil:
             self.head = node
             self.tail = node
@@ -72,7 +76,9 @@ class LinkedList(object):
         if not place:
             return self.append(data)
 
-        node = self.Node(data=data, next=place, prev=place.prev)
+        node = self._init_node(data=data)
+        node.next = place
+        node.prev = place.prev
         place.prev.next = node
         place.prev = node
 
@@ -96,10 +102,12 @@ class LinkedList(object):
 
         self._size -= 1
 
-    def walk(self, callback=print):
+    def walk(self, callback=print, stop=None):
         node = self.head
-        while node != self.nil:
+        for index in range(self.size()):
             callback(node)
+            if stop is not None and stop(index, node):
+                break
             node = node.next
 
     def print_list(self):
@@ -111,8 +119,99 @@ class LinkedList(object):
         return self._size
 
     def empty(self):
-        return self.head == self.nil
+        return self._size == 0
 
 
 class CircularList(LinkedList):
-    pass
+
+    def __init__(self, datas=[]):
+        self.nil = self.Node()
+        self.head = self.nil
+        self._size = 0
+
+        for data in datas:
+            self.append(data)
+
+    def _init_node(self, data):
+        node = self.Node(data=data)
+        return node
+
+    def search(self, data):
+        if self.head.data == data:
+            return self.head
+
+        node = self.head.next
+        while node != self.head:
+            if node.data == data:
+                return node
+            node = node.next
+
+    def append(self, data):
+        node = self._init_node(data=data)
+        if self.head == self.nil:
+            self.head = node
+            node.next = node
+            node.prev = node
+        else:
+            tail = self.head.prev
+            self.head.prev = node
+            node.prev = tail
+            tail.next = node
+            node.next = self.head
+
+        self._size += 1
+
+    def pop(self):
+        if self.empty():
+            return None
+        if self.size() == 1:
+            node = self.head
+            self.head = self.nil
+        else:
+            node = self.head.prev
+            tail = node.prev
+            tail.next = self.head
+            self.head.prev = tail
+
+        self._size -= 1
+        return node
+
+    def get(self, index):
+        if self.empty():
+            return None
+
+        node = self.head
+        index %= self.size()
+
+        for _ in range(index):
+            node = node.next
+        return node
+
+    def insert(self, index, data):
+        place = self.get(index)
+        if not place:
+            return self.append(data)
+
+        node = self._init_node(data=data)
+        node.next = place
+        node.prev = place.prev
+        place.prev.next = node
+        place.prev = node
+
+        self._size += 1
+
+    def delete(self, data):
+        node = self.search(data)
+        if not node:
+            return
+        if self.size() == 1:
+            self.head = self.nil
+        else:
+            prev = node.prev
+            next = node.next
+            prev.next = next
+            next.prev = prev
+            if node == self.head:
+                self.head = next
+
+        self._size -= 1
