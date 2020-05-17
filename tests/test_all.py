@@ -12,6 +12,7 @@ modules = [
     'test_table_lists',
     'test_table_steak',
     'test_table_queue',
+    'test_table_direct',
     'test_table_hash',
 
     'test_tree_heap',

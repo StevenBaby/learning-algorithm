@@ -50,7 +50,7 @@ class TestCase(BaseTestCase):
         list = lists.CircularList()
         for data in self.keys:
             list.append(data)
-        list.print_list()
+        # list.print_list()
         list.walk(
             callback=lambda e: None,
             stop=lambda index, node: self.assertEqual(node.data, self.keys[index])
