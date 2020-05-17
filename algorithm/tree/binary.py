@@ -138,9 +138,17 @@ class BinaryTree(object):
     def __init__(self):
         self.nil = self.Node()
         self.root = self.nil
+        self._size = 0
+
+    def _init_node(self, key, data=None):
+        node = self.Node(key=key, data=data, left=self.nil, right=self.nil, height=1)
+        return node
 
     def height(self):
         return self.root.height()
+
+    def size(self):
+        return self._size
 
     def get_level_nodes(self):
         from ..linear.queue import Queue
@@ -262,10 +270,6 @@ class SearchTree(BinaryTree):
             return None
         return parent
 
-    def _init_node(self, key, data=None):
-        node = self.Node(key=key, data=data, left=self.nil, right=self.nil, height=1)
-        return node
-
     def insert(self, key, data=None):
         node = self._init_node(key=key, data=data)
         parent = self.nil
@@ -286,6 +290,8 @@ class SearchTree(BinaryTree):
             parent.left = node
         else:
             parent.right = node
+
+        self._size += 1
 
         self._update_height(node)
 
@@ -340,4 +346,5 @@ class SearchTree(BinaryTree):
             middle.left.parent = middle
 
         node.free()
+        self._size -= 1
         return replace

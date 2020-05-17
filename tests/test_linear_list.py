@@ -17,9 +17,9 @@ class TestCase(BaseTestCase):
         list = linear.LinkedList()
         for key in self.keys:
             list.append(key)
-            self.assertEqual(list.length(), 1)
+            self.assertEqual(list.size(), 1)
             self.assertEqual(list.pop().data, key)
-            self.assertEqual(list.length(), 0)
+            self.assertEqual(list.size(), 0)
 
     @unittest.skipIf(skip, None)
     def test_search(self):
@@ -32,7 +32,7 @@ class TestCase(BaseTestCase):
         list = linear.LinkedList()
         for key in self.keys:
             list.insert(0, key)
-        self.assertEqual(list.length(), 16)
+        self.assertEqual(list.size(), 16)
         for key in self.keys:
             self.assertEqual(list.pop().data, key)
 
@@ -42,7 +42,7 @@ class TestCase(BaseTestCase):
         self.assertFalse(list.empty())
         for index, key in enumerate(self.keys):
             list.delete(key)
-            self.assertEqual(list.length(), len(self.keys) - index - 1)
+            self.assertEqual(list.size(), len(self.keys) - index - 1)
         self.assertTrue(list.empty())
 
 

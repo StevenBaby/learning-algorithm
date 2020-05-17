@@ -15,6 +15,7 @@ class TestCase(BaseTestCase):
     @unittest.skipIf(skip, None)
     def test_search(self):
         tree = avl.AVLTree(self.keys)
+        self.assertEqual(tree.size(), 16)
 
         for key in self.keys:
             self.assertTrue(tree.search(key))
@@ -79,6 +80,7 @@ class TestCase(BaseTestCase):
         tree = avl.AVLTree([20, 10, 30, 5, 15])
         tree.delete(30)
         self.assertEqual(tree.root.key, 10)
+        self.assertEqual(tree.size(), 4)
 
         tree = avl.AVLTree([50, 40, 60, 30, 45, 55, 10])
         tree.delete(55)

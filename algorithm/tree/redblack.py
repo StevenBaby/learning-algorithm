@@ -94,6 +94,7 @@ class RedBlackTree(SearchTree, RotateMinxin):
 
         if not node:
             return None
+
         color = node.color
         middle = node
 
@@ -126,6 +127,7 @@ class RedBlackTree(SearchTree, RotateMinxin):
             self._delete_fixup(replace)
 
         node.free()
+        self._size -= 1
         return replace
 
     def _delete_fixup(self, node):

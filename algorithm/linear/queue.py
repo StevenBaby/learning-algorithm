@@ -20,5 +20,5 @@ class Queue(LinkedList):
         if self.head != self.nil:
             self.head.prev = self.nil
 
-        self._length -= 1
+        self._size -= 1
         return node.data

@@ -25,7 +25,7 @@ class LinkedList(object):
         self.nil = self.Node()
         self.head = self.nil
         self.tail = self.nil
-        self._length = 0
+        self._size = 0
 
         for data in datas:
             self.append(data)
@@ -46,7 +46,7 @@ class LinkedList(object):
             self.tail.next = node
 
         self.tail = node
-        self._length += 1
+        self._size += 1
         return node
 
     def pop(self):
@@ -54,7 +54,7 @@ class LinkedList(object):
             return None
         node = self.tail
         self.tail = self.tail.prev
-        self._length -= 1
+        self._size -= 1
         return node
 
     def get(self, index):
@@ -78,7 +78,7 @@ class LinkedList(object):
 
         if node.prev == self.nil:
             self.head = node
-        self._length += 1
+        self._size += 1
 
     def delete(self, data):
         node = self.search(data)
@@ -94,7 +94,7 @@ class LinkedList(object):
         if next != self.nil:
             next.prev = prev
 
-        self._length -= 1
+        self._size -= 1
 
     def walk(self, callback=print):
         node = self.head
@@ -107,8 +107,8 @@ class LinkedList(object):
         self.walk(callback=lambda e: nodes.append(e))
         print(nodes)
 
-    def length(self):
-        return self._length
+    def size(self):
+        return self._size
 
     def empty(self):
         return self.head == self.nil
