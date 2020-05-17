@@ -84,7 +84,7 @@ class ChainHashTable(BaseTable):
         self._size = 0
 
         self._bucket = [ChainHashList() for _ in range(self._bucket_size)]
-        # self._update_factor()
+        self._update_factor()
 
         def insert_node(node):
             hashkey = self._hash(node.key)
