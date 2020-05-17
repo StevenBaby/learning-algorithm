@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from .list import LinkedList
+from .lists import LinkedList
 
 
 class Steak(LinkedList):

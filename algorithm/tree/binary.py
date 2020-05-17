@@ -113,7 +113,7 @@ class BinaryNode(object):
         callback(self)
 
     def levelorder_walk(self, callback=print, nil=None):
-        from ..linear.queue import Queue
+        from ..table.queue import Queue
         queue = Queue([self])
 
         while not queue.empty():
@@ -151,7 +151,7 @@ class BinaryTree(object):
         return self._size
 
     def get_level_nodes(self):
-        from ..linear.queue import Queue
+        from ..table.queue import Queue
         queue = Queue([(self.root, 1)])
         levels = {}
 

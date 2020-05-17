@@ -2,7 +2,7 @@
 import unittest
 
 from test_base import BaseTestCase
-from algorithm.linear.queue import Queue
+from algorithm.table.steak import Steak
 
 skip = (__name__ == '__main__')
 skip = None
@@ -14,14 +14,12 @@ class TestCase(BaseTestCase):
 
     @unittest.skipIf(skip, None)
     def test(self):
-        queue = Queue()
+        steak = Steak()
         for key in self.keys:
-            queue.push(key)
-
-        for key in self.keys:
-            node = queue.pop()
-            self.assertEqual(node, key)
-        self.assertTrue(queue.empty())
+            steak.push(key)
+            self.assertEqual(steak.top(), key)
+            steak.pop()
+            self.assertIsNone(steak.top())
 
 
 if __name__ == '__main__':

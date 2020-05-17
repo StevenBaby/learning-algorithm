@@ -9,9 +9,9 @@ modules = [
     'test_math_sqrt',
     'test_math_pi',
 
-    'test_linear_list',
-    'test_linear_steak',
-    'test_linear_queue',
+    'test_table_lists',
+    'test_table_steak',
+    'test_table_queue',
 
     'test_tree_heap',
     'test_tree_binary',

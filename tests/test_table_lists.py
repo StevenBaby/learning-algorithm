@@ -2,7 +2,7 @@
 import unittest
 
 from test_base import BaseTestCase
-from algorithm.linear import list as linear
+from algorithm.table import lists
 
 skip = (__name__ == '__main__')
 skip = None
@@ -14,7 +14,7 @@ class TestCase(BaseTestCase):
 
     @unittest.skipIf(skip, None)
     def test_append(self):
-        list = linear.LinkedList()
+        list = lists.LinkedList()
         for key in self.keys:
             list.append(key)
             self.assertEqual(list.size(), 1)
@@ -23,13 +23,13 @@ class TestCase(BaseTestCase):
 
     @unittest.skipIf(skip, None)
     def test_search(self):
-        list = linear.LinkedList(self.keys)
+        list = lists.LinkedList(self.keys)
         self.assertEqual(list.search(22).data, 22)
         self.assertIsNone(list.search(100))
 
     @unittest.skipIf(skip, None)
     def test_insert(self):
-        list = linear.LinkedList()
+        list = lists.LinkedList()
         for key in self.keys:
             list.insert(0, key)
         self.assertEqual(list.size(), 16)
@@ -38,7 +38,7 @@ class TestCase(BaseTestCase):
 
     @unittest.skipIf(skip, None)
     def test_delete(self):
-        list = linear.LinkedList(self.keys)
+        list = lists.LinkedList(self.keys)
         self.assertFalse(list.empty())
         for index, key in enumerate(self.keys):
             list.delete(key)
@@ -47,7 +47,7 @@ class TestCase(BaseTestCase):
 
     @unittest.skipIf(skip, None)
     def test_circular_list(self):
-        list = linear.CircularList()
+        list = lists.CircularList()
         for data in self.keys:
             list.append(data)
         list.print_list()
