@@ -81,25 +81,38 @@ class OpenAddressTable(DirectAddressTable):
 
     Node = OpenNode
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.quadratic_c_1 = 1
+        self.quadratic_c_2 = 1
+
+    def _hash_linear_probing(self, key, index):
+        return (key + index) % self._bucket_size
+
+    def _hash_key(self, key, index):
+        return self._hash_linear_probing(key, index)
+
     def _hash_insert(self, key):
-        hashkey = key % self._bucket_size
+        index = 0
+        hashkey = self._hash_key(key, index)
         node = self._bucket[hashkey]
         while node and not node.delete:
-            hashkey += 1
-            hashkey %= self._bucket_size
+            index += 1
+            hashkey = self._hash_key(key, index)
             node = self._bucket[hashkey]
         return hashkey
 
     def _hash_search(self, key):
-        hashkey = key % self._bucket_size
+        index = 0
+        hashkey = self._hash_key(key, index)
         node = self._bucket[hashkey]
         start = node
         while node:
             if node.key == key and not node.delete:
                 break
 
-            hashkey += 1
-            hashkey %= self._bucket_size
+            index += 1
+            hashkey = self._hash_key(key, index)
             node = self._bucket[hashkey]
             if node == start:
                 return None
