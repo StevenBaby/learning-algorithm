@@ -14,7 +14,7 @@ class TestCase(BaseTestCase):
     def test_search(self):
         keys = [7, 4, 11, 3, 6, 9, 18, 2, 14, 19, 12, 17, 22, 20, 21, 10]
         tree = statistic.OrderStatisticTree(keys)
-        print(sorted(keys))
+
         node = tree.select(0)
         self.assertEqual(node.key, 2)
         self.assertEqual(tree.rank(node), 0)

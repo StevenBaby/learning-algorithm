@@ -19,6 +19,7 @@ modules = [
     'test_tree_binary',
     'test_tree_avl',
     'test_tree_redblack',
+    'test_tree_statistic',
 
     'test_sort_insertion',
     'test_sort_quick',

@@ -47,8 +47,8 @@ class RedBlackTree(SearchTree, RotateMinxin):
         node.color = RED
         return node
 
-    def insert(self, key):
-        node = super().insert(key)
+    def insert(self, key: int, data=None):
+        node = super().insert(key, data=data)
         self._insert_fixup(node)
         return node
 
@@ -127,7 +127,6 @@ class RedBlackTree(SearchTree, RotateMinxin):
             self._delete_fixup(replace)
 
         node.free()
-        self._size -= 1
         return replace
 
     def _delete_fixup(self, node):
