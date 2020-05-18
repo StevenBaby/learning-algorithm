@@ -34,6 +34,7 @@ class BinaryNode(object):
         self.left = left
         self.right = right
         self._height = height
+        self._size = 1
 
     def relation(self):
         if not self.parent:
@@ -73,6 +74,20 @@ class BinaryNode(object):
 
     def __repr__(self):
         return self.__str__()
+
+    def size(self):
+        return self._size
+
+    def _update_size(self):
+        if not self.key:
+            return 0
+        size = 1
+        if self.left:
+            size += self.left.size()
+        if self.right:
+            size += self.right.size()
+        self._size = size
+        return self._size
 
     def height(self):
         if self._height > 0:
@@ -138,7 +153,6 @@ class BinaryTree(object):
     def __init__(self):
         self.nil = self.Node()
         self.root = self.nil
-        self._size = 0
 
     def _init_node(self, key, data=None):
         node = self.Node(key=key, data=data, left=self.nil, right=self.nil, height=1)
@@ -148,7 +162,7 @@ class BinaryTree(object):
         return self.root.height()
 
     def size(self):
-        return self._size
+        return self.root.size()
 
     def get_level_nodes(self):
         from ..table.queue import Queue
@@ -191,6 +205,12 @@ class BinaryTree(object):
 
     def levelorder_walk(self, callback=print):
         self.root.levelorder_walk(callback, self.nil)
+
+    def _update_size(self, node):
+        node.parent_walk(
+            callback=lambda e: e._update_size(),
+            nil=self.nil
+        )
 
     def _update_height(self, node):
         node.parent_walk(
@@ -291,8 +311,6 @@ class SearchTree(BinaryTree):
         else:
             parent.right = node
 
-        self._size += 1
-
         self._update_height(node)
 
         return node
@@ -346,5 +364,4 @@ class SearchTree(BinaryTree):
             middle.left.parent = middle
 
         node.free()
-        self._size -= 1
         return replace
