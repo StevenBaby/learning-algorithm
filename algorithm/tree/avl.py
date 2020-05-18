@@ -29,6 +29,7 @@ class RotateMinxin(object):
         x.parent = y
 
         self._update_height(node)
+        self._update_size(node)
 
     def _right_rotate(self, node):
 
@@ -54,6 +55,7 @@ class RotateMinxin(object):
         y.parent = x
 
         self._update_height(node)
+        self._update_size(node)
 
 
 class AVLNode(SearchNode):

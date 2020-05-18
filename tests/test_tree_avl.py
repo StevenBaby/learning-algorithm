@@ -32,10 +32,11 @@ class TestCase(BaseTestCase):
     @unittest.skipIf(skip, None)
     def test_insert(self):
         tree = avl.AVLTree()
-        for key in [8, 7, 6, 5, 4]:
+        for index, key in enumerate([8, 7, 6, 5, 4]):
             tree.insert(key)
             # print(tree.height())
             # tree.print_level_nodes()
+            self.assertEqual(tree.size(), index + 1)
             tree.inorder_walk(callback=lambda e: abs(e._factor()) < 2)
 
         self.assertEqual(tree.root.key, 7)
@@ -85,10 +86,12 @@ class TestCase(BaseTestCase):
         tree = avl.AVLTree([50, 40, 60, 30, 45, 55, 10])
         tree.delete(55)
         self.assertEqual(tree.root.key, 40)
+        self.assertEqual(tree.size(), 6)
 
         tree = avl.AVLTree([50, 40, 60, 45])
         tree.delete(60)
         self.assertEqual(tree.root.key, 45)
+        self.assertEqual(tree.size(), 3)
 
 
 if __name__ == '__main__':

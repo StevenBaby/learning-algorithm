@@ -34,7 +34,11 @@ class BinaryNode(object):
         self.left = left
         self.right = right
         self._height = height
-        self._size = 1
+        if not self.key:
+            self._size = 0
+        else:
+            self._size = 1
+        self._update_size()
 
     def relation(self):
         if not self.parent:
@@ -311,6 +315,7 @@ class SearchTree(BinaryTree):
         else:
             parent.right = node
 
+        self._update_size(node)
         self._update_height(node)
 
         return node
@@ -328,6 +333,8 @@ class SearchTree(BinaryTree):
             parent.right = replace
         self._update_height(replace)
         self._update_height(parent)
+        self._update_size(replace)
+        self._update_size(parent)
 
     def delete(self, key):
         node = self.search(key)
