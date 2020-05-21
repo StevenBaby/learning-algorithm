@@ -3,8 +3,9 @@
 
 class LinkedNode(object):
 
-    def __init__(self, key=None, next=None):
+    def __init__(self, key=None, data=None, next=None):
         self.key = key
+        self.data = data
         self.next = next
 
     def __str__(self):
