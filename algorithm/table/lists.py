@@ -140,6 +140,10 @@ class LinkedList(object):
         self.walk(callback=lambda e: nodes.append(e))
         print(nodes)
 
+    def clear(self):
+        self.head = self.nil
+        self._size = 0
+
     def size(self):
         return self._size
 
@@ -166,6 +170,10 @@ class DoubleLinkedList(LinkedList):
 
         for key in keys:
             self.append(key)
+
+    def clear(self):
+        super().clear()
+        self.tail = self.nil
 
     def _init_node(self, key):
         node = self.Node(key=key, next=self.nil, prev=self.tail)
