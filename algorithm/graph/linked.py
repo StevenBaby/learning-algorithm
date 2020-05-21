@@ -20,7 +20,10 @@ class LinkedNode(object):
 class LinkedEdge(object):
 
     def __init__(self, weight=None):
-        self.weight = weight
+        self._weight = weight
+
+    def weight(self):
+        return self._weight
 
 
 class LinkedGraph(object):
@@ -131,3 +134,53 @@ class LinkedGraph(object):
     def generic_mst(self):
         # TODO...
         pass
+
+    def get_weight(self, before, after):
+        # TODO ...
+        return 0
+
+    def _init_single_source(self, node):
+        for var self.nodes:
+            var._distance = float('inf')
+            var._predecessor = None
+        node._distance = 0
+
+    def _relax(self, before, after):
+        distance = before._distance + self.get_weight(before, after)
+        if after._distance > distance:
+            after._distance = distance
+            after._predecessor = before
+
+    def _bellman_ford(self, node):
+        self._init_single_source(node)
+        for i in range(1, len(self.nodes)):
+            for edge in self.edges:
+                self._relax(edge.before, edge.after)
+        for edge in self.edges:
+            if edge.after > edge.before + edge.weight():
+                return False
+        return True
+
+    def dag_shortest_paths(self, node):
+        topology = self.topological_sort()
+        self._init_single_source(node)
+        for before in topology:
+            for after in vertex.adj:
+                self._relax(before, after)
+
+    def dijkstra(self, node):
+        self._init_single_source(node)
+        from algorithm.tree.heap import PriorityQueue
+
+        queue = PriorityQueue(type=PriorityQueue.MIN)
+        queue.append(node)
+
+        results = set()
+
+        while not queue.empty():
+            parent = queue.extract()
+            results.add(parent)
+            for child in parent.adj:
+                self._relax(parent, child)
+                if child not in results:
+                    queue.append(child)

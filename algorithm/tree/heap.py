@@ -54,6 +54,9 @@ class Heap(ArrayBinaryTree):
             self._size = self.size() - 1
             self.heapify(0)
 
+    def empty(self):
+        return self.size() == 0
+
 
 class PriorityQueue(Heap):
 
