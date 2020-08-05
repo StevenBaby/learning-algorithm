@@ -124,6 +124,27 @@ public class Sort {
         }
     }
 
+    public static void shell(final int[] array, boolean reverse) {
+        if (array == null || array.length == 0)
+            return;
+        int step = array.length / 2;
+        while (step >= 1) {
+            for (int i = step; i < array.length; i++) {
+                int pivot = array[i];
+                int j = i;
+                for (; j - step >= 0; j -= step) {
+                    int diff = pivot - array[j - step];
+                    if ((!reverse && diff > 0) || (reverse && diff < 0)) {
+                        break;
+                    }
+                    array[j] = array[j - step];
+                }
+                array[j] = pivot;
+            }
+            step /= 2;
+        }
+    }
+
     private static void _quick_sort(final int[] array, int start, int end, boolean reverse) {
         if (start >= end)
             return;
@@ -226,14 +247,14 @@ public class Sort {
             array[0] = array[i];
             array[i] = temp;
             Sort.adjust_heap(array, 0, i, reverse);
-        } 
+        }
     }
 
     public static void main(String[] args) {
         int length = 16;
         int[] array = Sort.create(length);
         Sort.print(array);
-        Sort.heap(array, false);
+        Sort.shell(array, false);
         Sort.print(array);
     }
 }
