@@ -1,17 +1,8 @@
 {
 	"folders": [
         {
-            "name": "algorithm",
-            "path": "algorithm"
+            "path": "."
         },
-        {
-            "name": "experiments",
-            "path": "experiments"
-        },
-        {
-            "name": "tests",
-            "path": "tests"
-        }
     ],
     "settings": {
         "python.autoComplete.extraPaths": [
