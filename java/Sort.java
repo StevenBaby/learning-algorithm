@@ -229,19 +229,12 @@ public class Sort {
             public int low = 0;
             public int high = 0;
             public int mid = 0;
-            public boolean sorted = false;
             public boolean pushed = false;
 
             MergeItem(int low, int high) {
                 this.low = low;
                 this.high = high;
                 this.mid = (low + high) / 2;
-            }
-
-            public boolean isSorted() {
-                if (this.high - this.low <= 1)
-                    return true;
-                return this.sorted;
             }
         }
 
@@ -250,7 +243,7 @@ public class Sort {
 
         while (!stack.empty()) {
             MergeItem item = stack.peek();
-            if (item.isSorted()) {
+            if (item.high - item.low <= 1) {
                 stack.pop();
                 continue;
             }
@@ -260,8 +253,8 @@ public class Sort {
                 item.pushed = true;
                 continue;
             }
-            item.sorted = true;
             Sort._merge_array(array, item.low, item.mid, item.high, reverse);
+            stack.pop();
         }
     }
 
@@ -316,7 +309,7 @@ public class Sort {
         int length = 32;
         int[] array = Sort.create(length);
         Sort.print(array);
-        Sort.merge_stack(array, false);
+        Sort.merge_stack(array, true);
         Sort.print(array);
     }
 }
