@@ -183,12 +183,7 @@ public class Sort {
         Sort._quick_sort(array, 0, array.length, reverse);
     }
 
-    private static void _merge_sort(final int[] array, int low, int high, boolean reverse) {
-        if (high - low <= 1)
-            return;
-        int mid = (low + high) / 2;
-        Sort._merge_sort(array, low, mid, reverse);
-        Sort._merge_sort(array, mid, high, reverse);
+    private static void _merge_array(final int[] array, int low, int mid, int high, boolean reverse) {
         int[] clone = array.clone();
         int i = low;
         int j = mid;
@@ -208,6 +203,15 @@ public class Sort {
         while (j < high) {
             array[index++] = clone[j++];
         }
+    }
+
+    private static void _merge_sort(final int[] array, int low, int high, boolean reverse) {
+        if (high - low <= 1)
+            return;
+        int mid = (low + high) / 2;
+        Sort._merge_sort(array, low, mid, reverse);
+        Sort._merge_sort(array, mid, high, reverse);
+        Sort._merge_array(array, low, mid, high, reverse);
     }
 
     public static void merge(final int[] array, boolean reverse) {
@@ -256,68 +260,21 @@ public class Sort {
                 item.pushed = true;
                 continue;
             }
-
-            int low = item.low;
-            int mid = item.mid;
-            int high = item.high;
-
-            int i = low;
-            int j = mid;
-            int index = low;
-            int[] clone = array.clone();
-
-            while (i < mid && j < high) {
-                int diff = clone[i] - clone[j];
-                if ((!reverse && diff < 0) || (reverse && diff >= 0)) {
-                    array[index++] = clone[i++];
-                } else {
-                    array[index++] = clone[j++];
-                }
-            }
-            while (i < mid) {
-                array[index++] = clone[i++];
-            }
-            while (j < high) {
-                array[index++] = clone[j++];
-            }
-
             item.sorted = true;
+            Sort._merge_array(array, item.low, item.mid, item.high, reverse);
         }
-
     }
 
     public static void merge_iterate(final int[] array, boolean reverse) {
         if (array == null || array.length == 0)
             return;
         for (int segment = 1; segment < array.length; segment *= 2) {
-
             for (int low = 0; low < array.length; low += segment * 2) {
                 int mid = low + segment;
                 int high = mid + segment;
-
-                int i = low;
-                int j = mid;
-                int index = low;
-                int[] clone = array.clone();
-
-                while (i < mid && j < high) {
-                    int diff = clone[i] - clone[j];
-                    if ((!reverse && diff < 0) || (reverse && diff >= 0)) {
-                        array[index++] = clone[i++];
-                    } else {
-                        array[index++] = clone[j++];
-                    }
-                }
-                while (i < mid) {
-                    array[index++] = clone[i++];
-                }
-                while (j < high) {
-                    array[index++] = clone[j++];
-                }
+                Sort._merge_array(array, low, mid, high, reverse);
             }
-
         }
-
     }
 
     private static void adjust_heap(final int[] array, int low, int high, boolean reverse) {
@@ -356,7 +313,7 @@ public class Sort {
     }
 
     public static void main(String[] args) {
-        int length = 16;
+        int length = 32;
         int[] array = Sort.create(length);
         Sort.print(array);
         Sort.merge_stack(array, false);
