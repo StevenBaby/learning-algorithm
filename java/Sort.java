@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Stack;
 
 public class Sort {
 
@@ -211,9 +212,78 @@ public class Sort {
 
     public static void merge(final int[] array, boolean reverse) {
         // merge sort recursive
-        if (array == null || array.length == 0)
+        if (array == null || array.length <= 1)
             return;
         Sort._merge_sort(array, 0, array.length, reverse);
+    }
+
+    public static void merge_stack(final int[] array, boolean reverse) {
+        if (array == null || array.length <= 1)
+            return;
+
+        final class MergeItem {
+            public int low = 0;
+            public int high = 0;
+            public int mid = 0;
+            public boolean sorted = false;
+            public boolean pushed = false;
+
+            MergeItem(int low, int high) {
+                this.low = low;
+                this.high = high;
+                this.mid = (low + high) / 2;
+            }
+
+            public boolean isSorted() {
+                if (this.high - this.low <= 1)
+                    return true;
+                return this.sorted;
+            }
+        }
+
+        Stack<MergeItem> stack = new Stack<MergeItem>();
+        stack.push(new MergeItem(0, array.length));
+
+        while (!stack.empty()) {
+            MergeItem item = stack.peek();
+            if (item.isSorted()) {
+                stack.pop();
+                continue;
+            }
+            if (!item.pushed) {
+                stack.push(new MergeItem(item.low, item.mid));
+                stack.push(new MergeItem(item.mid, item.high));
+                item.pushed = true;
+                continue;
+            }
+
+            int low = item.low;
+            int mid = item.mid;
+            int high = item.high;
+
+            int i = low;
+            int j = mid;
+            int index = low;
+            int[] clone = array.clone();
+
+            while (i < mid && j < high) {
+                int diff = clone[i] - clone[j];
+                if ((!reverse && diff < 0) || (reverse && diff >= 0)) {
+                    array[index++] = clone[i++];
+                } else {
+                    array[index++] = clone[j++];
+                }
+            }
+            while (i < mid) {
+                array[index++] = clone[i++];
+            }
+            while (j < high) {
+                array[index++] = clone[j++];
+            }
+
+            item.sorted = true;
+        }
+
     }
 
     public static void merge_iterate(final int[] array, boolean reverse) {
@@ -289,7 +359,7 @@ public class Sort {
         int length = 16;
         int[] array = Sort.create(length);
         Sort.print(array);
-        Sort.merge_iterate(array, true);
+        Sort.merge_stack(array, false);
         Sort.print(array);
     }
 }
