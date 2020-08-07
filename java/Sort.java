@@ -236,6 +236,10 @@ public class Sort {
                 this.high = high;
                 this.mid = (low + high) / 2;
             }
+
+            public String toString() {
+                return this.low + " " + this.high;
+            }
         }
 
         Stack<MergeItem> stack = new Stack<MergeItem>();
