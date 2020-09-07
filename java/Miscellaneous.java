@@ -112,10 +112,10 @@ public class Miscellaneous {
 
             if (odd < 0 && array[i] % 2 == 0)
                 continue;
-            if (odd < 0 && array[i] % 2 == 1) {
+            if (odd < 0 && array[i] % 2 == 1)
                 odd = i;
-            }
-            assert (odd >= 0);
+
+            assert (odd > even);
 
             int temp = array[odd];
             while (odd - 1 >= even) {
@@ -124,12 +124,12 @@ public class Miscellaneous {
             }
             array[even] = temp;
             odd = -1;
-            even = i;
+            even++;
         }
     }
 
     public static void main(String[] args) {
-        int[] array = { 1, 2, 3, 4, 5 };
+        int[] array = { 1, 3, 2, 4, 5, 9, 7, 8 };
         Sort.print(array);
         pick_numbers(array);
         Sort.print(array);
