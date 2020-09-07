@@ -97,7 +97,42 @@ public class Miscellaneous {
         }
     }
 
+    public static void pick_numbers(int[] array) {
+        int even = -1;
+        int odd = -1;
+        for (int i = 0; i < array.length; i++) {
+            if (even < 0 && array[i] % 2 == 1)
+                continue;
+            if (even < 0 && array[i] % 2 == 0) {
+                even = i;
+                continue;
+            }
+
+            assert (even >= 0);
+
+            if (odd < 0 && array[i] % 2 == 0)
+                continue;
+            if (odd < 0 && array[i] % 2 == 1) {
+                odd = i;
+            }
+            assert (odd >= 0);
+
+            int temp = array[odd];
+            while (odd - 1 >= even) {
+                array[odd] = array[odd - 1];
+                odd--;
+            }
+            array[even] = temp;
+            odd = -1;
+            even = i;
+        }
+    }
+
     public static void main(String[] args) {
-        counter_print();
+        int[] array = { 1, 2, 3, 4, 5 };
+        Sort.print(array);
+        pick_numbers(array);
+        Sort.print(array);
+
     }
 }
